@@ -1,0 +1,3 @@
+rootProject.name = 'SG_FormSubmission'
+
+include ':app'
