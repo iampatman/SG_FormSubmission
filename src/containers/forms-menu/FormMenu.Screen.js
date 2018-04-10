@@ -2,11 +2,19 @@ import React from 'react'
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
 import styles from './FormMenu.Style'
 import listData from './FormMenu.Form'
-
+import navigateToMovingForm from '../../navigation/helpers/Nav.FormMenu.Helper'
 export default class FormMenuScreen extends React.Component {
   static navigationOptions = {
     title: 'Form Submission'
   }
+
+
+  onMenuSelected = () => {
+    const {navigation} = this.props
+    navigateToMovingForm(navigation)
+  }
+
+
   renderItem = (item) => {
     return (
       <TouchableOpacity style={styles.itemContainer}>
