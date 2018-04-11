@@ -1,9 +1,19 @@
 import n from '../RouteNames'
+import { NavigationActions } from 'react-navigation'
 
-export default resetToFormMenu = (navigation, param) => {
-
+export const resetToRoute = (navigation: Function, routeName: string, params = {}) => {
+  const resetAction = NavigationActions.reset({
+    index: 0,
+    actions: [
+      NavigationActions.navigate({
+        routeName,
+        params
+      })
+    ]
+  })
+  navigation.dispatch(resetAction)
 }
 
-export default navigateToMovingForm = (navigation, param) => {
+export const navigateToMovingForm = (navigation, param) => {
   navigation.navigate(n.MOVING, param)
 }
