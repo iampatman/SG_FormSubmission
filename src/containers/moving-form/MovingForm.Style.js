@@ -1,10 +1,18 @@
 import { StyleSheet, Dimensions } from 'react-native'
+
 const SCREEN_WIDTH = Dimensions.get('window').width
+const SCREEN_HEIGHT = Dimensions.get('window').height
 const item_spacing = 20
 const item_width = (SCREEN_WIDTH - item_spacing) / 4
 export default StyleSheet.create({
   container: {
     flex: 1,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    height: SCREEN_HEIGHT
   },
   input: {
     height: 50,
