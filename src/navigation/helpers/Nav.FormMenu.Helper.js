@@ -17,3 +17,10 @@ export const resetToRoute = (navigation: Function, routeName: string, params = {
 export const navigateToMovingForm = (navigation, param) => {
   navigation.navigate(n.MOVING, param)
 }
+export const resetToHome = (navigation, param) => {
+  resetToRoute(navigation, n.FORM_MENU)
+}
+
+export const navigateToThankyou = (navigation, param) => {
+  navigation.navigate(n.THANK_YOU, param)
+}

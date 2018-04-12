@@ -7,6 +7,8 @@ const item_width = (SCREEN_WIDTH - item_spacing) / 4
 export default StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: 10,
+    backgroundColor: 'white'
   },
   modalContainer: {
     flex: 1,
@@ -16,10 +18,12 @@ export default StyleSheet.create({
   },
   input: {
     height: 50,
-    margin: 10,
+    marginVertical: 8,
     paddingHorizontal: 10,
     borderWidth: 0.3,
     borderColor: 'gray',
     borderRadius: 4
-  }
+  },
+  submitBtn: {position: 'absolute', bottom: 0, width: SCREEN_WIDTH, height: 65},
+
 })

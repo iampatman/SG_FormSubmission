@@ -5,8 +5,6 @@ import {
   Text
 } from 'react-native'
 import {Calendar} from 'react-native-calendars'
-import Logger from '../../utils/Logger'
-import tr from '../../localization/Translator'
 import {styles} from './Calendar.Picker.Style'
 
 const CalendarPicker = props => {
@@ -29,12 +27,12 @@ const CalendarPicker = props => {
           minDate={'1940-01-01'}
           onDayPress={(date) => {
             let value = new Date(date.timestamp)
-            Logger.log('onDayPress: ' + value)
+            console.log('onDayPress: ' + value)
             onChange(value)
           }}
-          monthFormat={tr('calendar_picker.month_format')}
+          monthFormat={'MM/yyyy'}
           onMonthChange={(month) => {
-            Logger.log('month changed', month)
+            console.log('month changed', month)
           }}
           hideExtraDays
           disableMonthChange={false}
