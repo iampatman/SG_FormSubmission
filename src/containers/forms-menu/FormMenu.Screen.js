@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
 import styles from './FormMenu.Style'
 import listData from './FormMenu.Form'
-import { navigateToMovingForm } from '../../navigation/helpers/Nav.FormMenu.Helper'
+import { navigateToHistory, navigateToMovingForm } from '../../navigation/helpers/Nav.FormMenu.Helper'
 
 export default class FormMenuScreen extends React.Component {
   static navigationOptions = {
@@ -15,7 +15,11 @@ export default class FormMenuScreen extends React.Component {
       case 1:
         navigateToMovingForm(navigation)
     }
+  }
 
+  onShowHistoryPressed = () => {
+    const {navigation} = this.props
+    navigateToHistory(navigation)
   }
 
   renderItem = (item) => {
@@ -30,7 +34,7 @@ export default class FormMenuScreen extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.historyContainer}>
+        <TouchableOpacity style={styles.historyContainer} onPress={this.onShowHistoryPressed}>
           <Text>Check Submission History</Text>
         </TouchableOpacity>
         <FlatList data={listData}

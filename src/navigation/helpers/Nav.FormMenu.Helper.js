@@ -24,3 +24,7 @@ export const resetToHome = (navigation, param) => {
 export const navigateToThankyou = (navigation, param) => {
   navigation.navigate(n.THANK_YOU, param)
 }
+
+export const navigateToHistory = (navigation, param) => {
+  navigation.navigate(n.SUBMISSION_HISTORY, param)
+}

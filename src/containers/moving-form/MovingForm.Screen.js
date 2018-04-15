@@ -42,17 +42,22 @@ export default class MovingFormScreen extends React.Component {
     const {navigation} = this.props
     navigateToThankyou(navigation)
   }
+
+  onMovingSituationSelected = (text) => {
+    console.log('onPickerConfirm' + text[0])
+    this.refMovingSituation.setNativeProps({text: text[0]})
+  }
+
   render () {
     return (
       <View style={styles.container}>
         <ScrollView content={{paddingBottom: 80}}>
-          <TextInput ref={ref => this.refMovingSituation = ref} style={styles.input} placeholder={'Moving Situation'}
+          <TextInput ref={ref => this.refMovingSituation = ref}
+                     style={styles.input}
+                     placeholder={'Moving Situation'}
                      onFocus={() => showPicker({
                        pickerData: movingSituationData,
-                       onPickerConfirm: (text) => {
-                         console.log('onPickerConfirm' + text[0])
-                         this.refMovingSituation.setNativeProps({text: text[0]})
-                       }
+                       onPickerConfirm: this.onMovingSituationSelected
                      })}/>
           <TextInput style={styles.input} placeholder={'Moving Date'}
                      ref={ref => this.refMovingDate = ref}
@@ -64,7 +69,8 @@ export default class MovingFormScreen extends React.Component {
             <Text>Engaging Contractor/Mover</Text>
             <Checkbox onChange={(selected) => {
               console.log('Checkbox onChange' + selected.target.checked)
-              this.setState({showingMovingContractor:  selected.target.checked})}}></Checkbox>
+              this.setState({showingMovingContractor: selected.target.checked})
+            }} />
           </View>
           {this.renderContractorForm()}
 
