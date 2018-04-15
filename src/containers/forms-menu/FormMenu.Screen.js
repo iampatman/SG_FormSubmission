@@ -2,7 +2,10 @@ import React from 'react'
 import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
 import styles from './FormMenu.Style'
 import listData from './FormMenu.Form'
-import { navigateToHistory, navigateToMovingForm } from '../../navigation/helpers/Nav.FormMenu.Helper'
+import {
+  navigateToHistory, navigateToMovingForm,
+  navigateToRentalForm
+} from '../../navigation/helpers/Nav.FormMenu.Helper'
 
 export default class FormMenuScreen extends React.Component {
   static navigationOptions = {
@@ -14,6 +17,9 @@ export default class FormMenuScreen extends React.Component {
     switch (id) {
       case 1:
         navigateToMovingForm(navigation)
+        return
+      case 2:
+        navigateToRentalForm(navigation)
     }
   }
 

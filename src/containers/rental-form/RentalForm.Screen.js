@@ -1,43 +1,26 @@
 import React from 'react'
 import { View, TextInput, Dimensions, Modal, Text, ScrollView } from 'react-native'
-import styles from './MovingForm.Style'
+import styles from './RentalForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
-import { movingSituationData } from './MovingSituation.Data'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
 import { Button } from 'antd-mobile'
 import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
 
-export default class MovingFormScreen extends React.Component {
+export default class RentalFormScreen extends React.Component {
   static navigationOptions = {
-    title: 'Moving'
+    title: 'Rental'
   }
 
   constructor (props) {
     super(props)
     this.state = {
       showingCalendarPicker: false,
-      showingMovingContractor: false
+      tacChecked: false
     }
 
   }
 
-  renderContractorForm = () => {
-    if (this.state.showingMovingContractor) {
-      return (
-        <View>
-          <TextInput style={styles.input} placeholder={'Mover Name'}/>
-          <TextInput style={styles.input} placeholder={'Mover Address'}/>
-          <TextInput style={styles.input} placeholder={'Mover Mobile Number'}/>
-          <TextInput style={styles.input} placeholder={'Mover Email'}/>
-          <TextInput style={styles.input} placeholder={'Vehicle Type'}/>
-        </View>
-      )
-    } else {
-      return null
-    }
-
-  }
   onSubmitPressed = () => {
     const {navigation} = this.props
     navigateToThankyou(navigation)
@@ -54,26 +37,27 @@ export default class MovingFormScreen extends React.Component {
         <ScrollView content={{paddingBottom: 80}}>
           <TextInput ref={ref => this.refTenantType = ref}
                      style={styles.input}
-                     placeholder={'Moving Situation'}
+                     placeholder={'Tenant Type'}
                      onFocus={() => showPicker({
                        pickerData: movingSituationData,
                        onPickerConfirm: this.onMovingSituationSelected
                      })}/>
-          <TextInput style={styles.input} placeholder={'Moving Date'}
+          <TextInput style={styles.input} placeholder={'Tenant Name'}/>
+          <TextInput style={styles.input} placeholder={'Tenant Phone Number'}/>
+          <TextInput style={styles.input} placeholder={'Tenancy From'}
                      ref={ref => this.refTenancyFrom = ref}
                      onFocus={() => this.setState({showingCalendarPicker: true})}/>
-          <TextInput style={styles.input} placeholder={'Unit'} value={'13-580'} editable={false}/>
-          <TextInput style={styles.input} placeholder={'Email address'} value={'nguyentrung0904@gmail.com'}/>
+          <TextInput style={styles.input} placeholder={'Tenancy To'}
+                     ref={ref => this.refTenancyTo = ref}
+                     onFocus={() => this.setState({showingCalendarPicker: true})}/>
           <TextInput style={styles.input} placeholder={'Description'}/>
           <View style={{flexDirection: 'row'}}>
-            <Text>Engaging Contractor/Mover</Text>
             <Checkbox onChange={(selected) => {
               console.log('Checkbox onChange' + selected.target.checked)
-              this.setState({showingMovingContractor: selected.target.checked})
-            }} />
+              this.setState({tacChecked: selected.target.checked})
+            }}/>
+            <Text>I agree to the terms and conditions</Text>
           </View>
-          {this.renderContractorForm()}
-
           <CalendarPicker visible={this.state.showingCalendarPicker} title={'Moving date'}
                           onChange={(data) => {
                             console.log('CalendarPicker ' + data)
@@ -81,7 +65,10 @@ export default class MovingFormScreen extends React.Component {
                             this.setState({showingCalendarPicker: false})
                           }}/>
         </ScrollView>
-        <Button type={'primary'} style={styles.submitBtn} onClick={this.onSubmitPressed}>SUBMIT</Button>
+        <Button disabled={!this.state.tacChecked}
+                type={'primary'}
+                style={styles.submitBtn}
+                onClick={this.onSubmitPressed}>SUBMIT</Button>
       </View>
     )
   }

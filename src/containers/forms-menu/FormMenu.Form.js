@@ -1,14 +1,17 @@
+import n from '../../navigation/RouteNames'
+
 export default [
   {
     id: 1,
     title: 'Moving',
-    icon: require('../../assets/icons/ic_moving_blue.png')
+    icon: require('../../assets/icons/ic_moving_blue.png'),
+    nextScreen: n.MOVING
   },
   {
     id: 2,
     title: 'Rental',
-    icon: require('../../assets/icons/ic_rental_blue.png')
-
+    icon: require('../../assets/icons/ic_rental_blue.png'),
+    nextScreen: n.RENTAL
   },
   {
     id: 3,
