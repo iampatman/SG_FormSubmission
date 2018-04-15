@@ -1,3 +1,7 @@
 export default {
-  token: ''
+  token: '',
+  userDetails: {
+    email: '',
+    unit: ''
+  }
 }

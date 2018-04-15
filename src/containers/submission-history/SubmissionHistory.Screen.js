@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, TextInput, Dimensions, Modal, Text, ScrollView, FlatList, Image } from 'react-native'
+import { View, TextInput, Dimensions, Modal, Text, ScrollView, FlatList, Image, TouchableOpacity } from 'react-native'
 import styles from './SubmissionHistory.Style'
 
 import { Button } from 'antd-mobile'
-import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
+import { navigateToFormDetail, navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
 
 export default class SubmissionHistoryScreen extends React.Component {
   static navigationOptions = {
@@ -12,9 +12,7 @@ export default class SubmissionHistoryScreen extends React.Component {
 
   constructor (props) {
     super(props)
-    this.state = {
-
-    }
+    this.state = {}
 
   }
 
@@ -34,13 +32,20 @@ export default class SubmissionHistoryScreen extends React.Component {
     }
   }
 
+  onItemPressed = (item) => {
+    const {navigation} = this.props
+    navigateToFormDetail(navigation, {
+      formId: item.formId
+    })
+  }
+
   renderItem = (item) => {
 
     const highlight = item.status == 'Pending'
     const textStyle = highlight ? null : styles.detailTextStyle1
     const icon = this.getIconFromFormTypeId(item.formTypeId, highlight)
     return (
-      <View style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={() => this.onItemPressed(item)}>
         <Image source={icon}/>
         <View style={styles.detailContainer}>
           <Text style={textStyle}>
@@ -59,7 +64,7 @@ export default class SubmissionHistoryScreen extends React.Component {
             </View>
             : null}
         </View>
-      </View>
+      </TouchableOpacity>
     )
   }
 

@@ -25,6 +25,9 @@ export const resetToHome = (navigation, param) => {
   resetToRoute(navigation, n.FORM_MENU)
 }
 
+export const navigateToFormDetail = (navigation, param) => {
+  navigation.navigate(n.FORM_DETAIL, param)
+}
 export const navigateToThankyou = (navigation, param) => {
   navigation.navigate(n.THANK_YOU, param)
 }
