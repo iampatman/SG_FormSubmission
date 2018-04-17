@@ -10,15 +10,17 @@
     "antd-mobile": "2.1.8",
     "lodash": "4.17.5",
     "react": "16.2.0",
+    "react-dom": "16.2.0",
     "react-native": "0.52.2",
     "react-native-calendars": "1.17.7",
+    "react-native-document-picker": "^2.1.0",
+    "react-native-image-picker": "^0.26.7",
     "react-native-picker": "4.3.5",
-    "react-navigation": "1.5.1",
-    "react-dom": "16.2.0"
+    "react-navigation": "1.5.1"
   },
   "devDependencies": {
-    "babel-plugin-import": "1.6.6",
     "babel-jest": "22.4.3",
+    "babel-plugin-import": "1.6.6",
     "babel-preset-react-native": "4.0.0",
     "jest": "22.4.3",
     "react-test-renderer": "^16.3.0-alpha.1"
