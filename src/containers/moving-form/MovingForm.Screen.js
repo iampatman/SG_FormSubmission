@@ -23,7 +23,6 @@ export default class MovingFormScreen extends React.Component {
       showingMovingContractor: false,
       loading: false
     }
-
   }
 
   submitForm = () => {
