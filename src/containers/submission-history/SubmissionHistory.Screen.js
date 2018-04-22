@@ -4,6 +4,8 @@ import styles from './SubmissionHistory.Style'
 
 import { Button } from 'antd-mobile'
 import { navigateToFormDetail, navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
+import { loadFormHistory } from '../../api/index'
+import Loader from '../../components/loader/Loader'
 
 export default class SubmissionHistoryScreen extends React.Component {
   static navigationOptions = {
@@ -12,8 +14,29 @@ export default class SubmissionHistoryScreen extends React.Component {
 
   constructor (props) {
     super(props)
-    this.state = {}
+    this.state = {
+      data: [],
+      loading: true
+    }
 
+  }
+
+  loadData = () => {
+    loadFormHistory().then(({data}) => {
+      console.log('SubmissionHistoryScreen data' + data)
+      this.setState({
+        data,
+        loading: false
+      })
+    }).catch((error) => {
+      this.setState({
+        loading: false
+      })
+    })
+  }
+
+  componentDidMount () {
+    this.loadData()
   }
 
   getIconFromFormTypeId = (formTypeId, hightlight) => {
@@ -41,15 +64,15 @@ export default class SubmissionHistoryScreen extends React.Component {
 
   renderItem = (item) => {
 
-    const highlight = item.status == 'Pending'
+    const highlight = item.status.toLowerCase() == 'pending'
     const textStyle = highlight ? null : styles.detailTextStyle1
-    const icon = this.getIconFromFormTypeId(item.formTypeId, highlight)
+    const icon = this.getIconFromFormTypeId(item.form_type.toString(), highlight)
     return (
       <TouchableOpacity style={styles.itemContainer} onPress={() => this.onItemPressed(item)}>
         <Image source={icon}/>
         <View style={styles.detailContainer}>
           <Text style={textStyle}>
-            {item.formTypeName}
+            {item.form_name}
           </Text>
           <Text style={textStyle}>
             Status: {item.status}
@@ -57,9 +80,9 @@ export default class SubmissionHistoryScreen extends React.Component {
         </View>
         <View style={styles.itemRightContainer}>
           <Text style={textStyle}>
-            {item.date}
+            {item.created_date}
           </Text>
-          {item.hasNewMessage ? <View style={styles.newMsgContainer}>
+          {item.new_message ? <View style={styles.newMsgContainer}>
               <Text style={styles.newMsgText}>New Message</Text>
             </View>
             : null}
@@ -75,37 +98,41 @@ export default class SubmissionHistoryScreen extends React.Component {
   }
 
   render () {
-    const data = [
-      {
-        formId: '1',
-        formTypeId: '1',
-        formTypeName: 'Moving',
-        status: 'Pending',
-        date: '23/10/2018',
-        hasNewMessage: false
-      },
-      {
-        formId: '2',
-        formTypeId: '2',
-        formTypeName: 'Moving',
-        status: 'Pending',
-        date: '23/10/2018',
-        hasNewMessage: true
-      },
-      {
-        formId: '3',
-        formTypeId: '3',
-        formTypeName: 'Wallet Refund',
-        status: 'Approved',
-        date: '23/10/2018',
-        hasNewMessage: false
-      }
-    ]
+    // const data = [
+    //   {
+    //     formId: '1',
+    //     formTypeId: '1',
+    //     formTypeName: 'Moving',
+    //     status: 'Pending',
+    //     date: '23/10/2018',
+    //     hasNewMessage: false
+    //   },
+    //   {
+    //     formId: '2',
+    //     formTypeId: '2',
+    //     formTypeName: 'Moving',
+    //     status: 'Pending',
+    //     date: '23/10/2018',
+    //     hasNewMessage: true
+    //   },
+    //   {
+    //     formId: '3',
+    //     formTypeId: '3',
+    //     formTypeName: 'Wallet Refund',
+    //     status: 'Approved',
+    //     date: '23/10/2018',
+    //     hasNewMessage: false
+    //   }
+    // ]
+    const {loading, data} = this.state
+
     return (
+
       <View style={styles.container}>
+        <Loader loading={loading}/>
         <FlatList data={data}
                   renderItem={(item) => this.renderItem(item.item)}
-                  keyExtractor={(item) => item.formId}
+                  keyExtractor={(item) => item.id.toString()}
                   ItemSeparatorComponent={this.renderSeparator}/>
       </View>
     )

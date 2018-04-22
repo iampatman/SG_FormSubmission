@@ -3,13 +3,13 @@ import { View, TextInput, Dimensions, Modal, Text, ScrollView, Alert } from 'rea
 import styles from './MovingForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
-import { movingSituationData } from './MovingSituation.Data'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
 import { Button } from 'antd-mobile'
 import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
-import { sendMovingForm } from '../../api/index'
 import Loader from '../../components/loader/Loader'
+import { loadMovingSituation, sendMovingForm } from '../../api/index'
+import moment from 'moment'
 
 export default class MovingFormScreen extends React.Component {
   static navigationOptions = {
@@ -18,17 +18,50 @@ export default class MovingFormScreen extends React.Component {
 
   constructor (props) {
     super(props)
+
+    this.data = {
+      formtype: 1,
+      moving_situation: this.movingSituation,
+      movingDate: '',
+      description: '',
+      mover: false,
+      engaging_contractor: {
+        choose: false,
+        mover_name: '',
+        mover_address: '',
+        mover_phno: '',
+        mover_email: '',
+        vehicle_type: ''
+      },
+      file_upload: []
+    }
+
     this.state = {
       showingCalendarPicker: false,
       showingMovingContractor: false,
-      loading: false
+      loading: true,
+      movingSituationData: []
     }
   }
 
-  submitForm = () => {
+  loadData = () => {
+    loadMovingSituation().then(({moving_situation}) => {
+      this.setState({
+        movingSituationData: moving_situation,
+        loading: false
+      })
+    }).catch()
+  }
+
+  componentDidMount () {
+    this.loadData()
+  }
+
+  submitForm = (data) => {
     const {navigation} = this.props
+
     this.setState({loading: true})
-    sendMovingForm().then((result) => {
+    sendMovingForm(data).then((result) => {
       setTimeout(() => {
         this.setState({loading: false})
         navigateToThankyou(navigation)
@@ -38,15 +71,39 @@ export default class MovingFormScreen extends React.Component {
     })
   }
 
+  onSubmitPressed = () => {
+    console.log(this.data.movingSituation)
+    const data = {
+      date: this.refTenantType._lastNativeText
+    }
+
+    this.submitForm(data)
+  }
+
+  onCalendarChanged = (date: Date) => {
+    let dateStr = date.toDateString()
+    let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('MM/DD/YYYY')
+    console.log('CalendarPicker ' + formattedStr)
+    this.refTenancyFrom.setNativeProps({text: formattedStr})
+    this.setState({
+      showingCalendarPicker: false,
+    })
+  }
+
   renderContractorForm = () => {
     if (this.state.showingMovingContractor) {
       return (
         <View>
-          <TextInput style={styles.input} placeholder={'Mover Name'}/>
-          <TextInput style={styles.input} placeholder={'Mover Address'}/>
-          <TextInput style={styles.input} placeholder={'Mover Mobile Number'}/>
-          <TextInput style={styles.input} placeholder={'Mover Email'}/>
-          <TextInput style={styles.input} placeholder={'Vehicle Type'}/>
+          <TextInput style={styles.input} placeholder={'Mover Name'}
+                     onChangeText={(text) => {this.data.mover_name = text}}/>
+          <TextInput style={styles.input} placeholder={'Mover Address'}
+                     onChangeText={(text) => {this.data.mover_address = text}}/>
+          <TextInput style={styles.input} placeholder={'Mover Mobile Number'}
+                     onChangeText={(text) => {this.data.mover_phno = text}}/>
+          <TextInput style={styles.input} placeholder={'Mover Email'}
+                     onChangeText={(text) => {this.data.mover_email = text}}/>
+          <TextInput style={styles.input} placeholder={'Vehicle Type'}
+                     onChangeText={(text) => {this.data.vehicle_type = text}}/>
         </View>
       )
     } else {
@@ -54,14 +111,14 @@ export default class MovingFormScreen extends React.Component {
     }
 
   }
-  onSubmitPressed = () => {
-    this.submitForm()
-  }
 
   onMovingSituationSelected = (text) => {
     console.log('onPickerConfirm' + text[0])
+    this.data.movingSituation = text[0]
     this.refTenantType.setNativeProps({text: text[0]})
   }
+
+
   uploadFile = () => {
     DocumentPicker.show({
       filetype: [DocumentPickerUtil.allFiles()],
@@ -77,24 +134,26 @@ export default class MovingFormScreen extends React.Component {
   }
 
   render () {
+    const {movingSituationData} = this.state
     return (
       <View style={styles.container}>
         <Loader loading={this.state.loading} text={'Submitting'}/>
-        <ScrollView content={{paddingBottom: 80}}>
+        <ScrollView contentContainerStyle={{paddingBottom: 80}}>
           <TextInput ref={ref => this.refTenantType = ref}
                      style={styles.input}
                      placeholder={'Moving Situation'}
                      onFocus={() => showPicker({
-                       pickerData: movingSituationData,
+                       pickerData: movingSituationData.map((item) => item.name),
                        onPickerConfirm: this.onMovingSituationSelected
                      })}/>
           <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20}}>
-            <Button type={'ghost'} onClick={this.uploadFile}>Upload file 1</Button>
-            <Button type={'ghost'} onClick={this.uploadFile}>Upload file 2</Button>
+            <Button type={'ghost'} onClick={this.uploadFile}>Upload file 47</Button>
+            <Button type={'ghost'} onClick={this.uploadFile}>Upload file 65</Button>
           </View>
           <TextInput style={styles.input} placeholder={'Moving Date'}
                      ref={ref => this.refTenancyFrom = ref}
                      onFocus={() => this.setState({showingCalendarPicker: true})}/>
+
           <TextInput style={styles.input} placeholder={'Unit'} value={'13-580'} editable={false}/>
           <TextInput style={styles.input} placeholder={'Email address'} value={'nguyentrung0904@gmail.com'}/>
           <TextInput style={styles.input} placeholder={'Description'}/>
@@ -102,17 +161,14 @@ export default class MovingFormScreen extends React.Component {
             <Text>Engaging Contractor/Mover</Text>
             <Checkbox onChange={(selected) => {
               console.log('Checkbox onChange' + selected.target.checked)
+              this.data.engaging_contractor.choose = selected.target.checked
               this.setState({showingMovingContractor: selected.target.checked})
             }}/>
           </View>
           {this.renderContractorForm()}
 
           <CalendarPicker visible={this.state.showingCalendarPicker} title={'Moving date'}
-                          onChange={(data) => {
-                            console.log('CalendarPicker ' + data)
-                            this.refTenancyFrom.setNativeProps({text: data})
-                            this.setState({showingCalendarPicker: false})
-                          }}/>
+                          onChange={this.onCalendarChanged}/>
         </ScrollView>
         <Button type={'primary'} style={styles.submitBtn} onClick={this.onSubmitPressed}>SUBMIT</Button>
       </View>

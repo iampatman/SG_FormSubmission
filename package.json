@@ -9,6 +9,7 @@
   "dependencies": {
     "antd-mobile": "2.1.8",
     "lodash": "4.17.5",
+    "moment": "^2.22.1",
     "react": "16.2.0",
     "react-dom": "16.2.0",
     "react-native": "0.52.2",

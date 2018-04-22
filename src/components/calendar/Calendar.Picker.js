@@ -4,8 +4,8 @@ import {
   Modal,
   Text
 } from 'react-native'
-import {Calendar} from 'react-native-calendars'
-import {styles} from './Calendar.Picker.Style'
+import { Calendar } from 'react-native-calendars'
+import { styles } from './Calendar.Picker.Style'
 
 const CalendarPicker = props => {
   const {

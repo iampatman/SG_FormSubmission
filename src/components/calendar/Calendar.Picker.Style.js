@@ -32,7 +32,7 @@ export const styles = StyleSheet.create({
   calendarContainer: {
     flex: 1,
     width: width,
-    height: width / 2,
+    // height: width / 2,
     justifyContent: 'flex-start',
     opacity: 1
   }
