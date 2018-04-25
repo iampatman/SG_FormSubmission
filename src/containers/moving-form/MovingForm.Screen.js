@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TextInput, Dimensions, Modal, Text, ScrollView, Alert } from 'react-native'
+import { View, TextInput, Dimensions, Modal, Text, ScrollView, Alert, TouchableOpacity } from 'react-native'
 import styles from './MovingForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
@@ -24,7 +24,6 @@ export default class MovingFormScreen extends React.Component {
       moving_situation: this.movingSituation,
       movingDate: '',
       description: '',
-      mover: false,
       engaging_contractor: {
         choose: false,
         mover_name: '',
@@ -59,7 +58,7 @@ export default class MovingFormScreen extends React.Component {
 
   submitForm = (data) => {
     const {navigation} = this.props
-
+    console.log('Data submitForm' + data)
     this.setState({loading: true})
     sendMovingForm(data).then((result) => {
       setTimeout(() => {
@@ -72,12 +71,8 @@ export default class MovingFormScreen extends React.Component {
   }
 
   onSubmitPressed = () => {
-    console.log(this.data.movingSituation)
-    const data = {
-      date: this.refTenantType._lastNativeText
-    }
-
-    this.submitForm(data)
+    console.log('Data onSubmitPressed' + JSON.stringify(this.data))
+    this.submitForm(this.data)
   }
 
   onCalendarChanged = (date: Date) => {
@@ -85,6 +80,7 @@ export default class MovingFormScreen extends React.Component {
     let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('MM/DD/YYYY')
     console.log('CalendarPicker ' + formattedStr)
     this.refTenancyFrom.setNativeProps({text: formattedStr})
+    this.data.movingDate = formattedStr
     this.setState({
       showingCalendarPicker: false,
     })
@@ -95,15 +91,15 @@ export default class MovingFormScreen extends React.Component {
       return (
         <View>
           <TextInput style={styles.input} placeholder={'Mover Name'}
-                     onChangeText={(text) => {this.data.mover_name = text}}/>
+                     onChangeText={(text) => {this.data.engaging_contractor.mover_name = text}}/>
           <TextInput style={styles.input} placeholder={'Mover Address'}
-                     onChangeText={(text) => {this.data.mover_address = text}}/>
+                     onChangeText={(text) => {this.data.engaging_contractor.mover_address = text}}/>
           <TextInput style={styles.input} placeholder={'Mover Mobile Number'}
-                     onChangeText={(text) => {this.data.mover_phno = text}}/>
+                     onChangeText={(text) => {this.data.engaging_contractor.mover_phno = text}}/>
           <TextInput style={styles.input} placeholder={'Mover Email'}
-                     onChangeText={(text) => {this.data.mover_email = text}}/>
+                     onChangeText={(text) => {this.data.engaging_contractor.mover_email = text}}/>
           <TextInput style={styles.input} placeholder={'Vehicle Type'}
-                     onChangeText={(text) => {this.data.vehicle_type = text}}/>
+                     onChangeText={(text) => {this.data.engaging_contractor.vehicle_type = text}}/>
         </View>
       )
     } else {
@@ -117,7 +113,6 @@ export default class MovingFormScreen extends React.Component {
     this.data.movingSituation = text[0]
     this.refTenantType.setNativeProps({text: text[0]})
   }
-
 
   uploadFile = () => {
     DocumentPicker.show({
@@ -153,10 +148,10 @@ export default class MovingFormScreen extends React.Component {
           <TextInput style={styles.input} placeholder={'Moving Date'}
                      ref={ref => this.refTenancyFrom = ref}
                      onFocus={() => this.setState({showingCalendarPicker: true})}/>
-
           <TextInput style={styles.input} placeholder={'Unit'} value={'13-580'} editable={false}/>
           <TextInput style={styles.input} placeholder={'Email address'} value={'nguyentrung0904@gmail.com'}/>
-          <TextInput style={styles.input} placeholder={'Description'}/>
+          <TextInput style={styles.input} placeholder={'Description'}
+                     onChangeText={(text) => this.data.description = text}/>
           <View style={{flexDirection: 'row'}}>
             <Text>Engaging Contractor/Mover</Text>
             <Checkbox onChange={(selected) => {

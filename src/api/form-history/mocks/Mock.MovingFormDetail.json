@@ -23,17 +23,19 @@
       "mover_email": "",
       "vehicle_type": ""
     },
-    "other_information": [
-      {
-        "id": 1,
-        "name": "Sec_47.pdf",
-        "url": "https://api.lifeup.com.sg/images/Sec_47.pdf"
-      },
-      {
-        "name": "Sec_65.pdf",
-        "url": "https://api.lifeup.com.sg/images/Sec_65.pdf"
-      }
-    ],
+    "other_information": {
+      "attached_file": [
+        {
+          "id": 1,
+          "name": "Sec_47.pdf",
+          "url": "https://api.lifeup.com.sg/images/Sec_47.pdf"
+        },
+        {
+          "name": "Sec_65.pdf",
+          "url": "https://api.lifeup.com.sg/images/Sec_65.pdf"
+        }
+      ]
+    },
     "messages": [
       {
         "id": 1,
