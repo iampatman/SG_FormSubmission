@@ -19,7 +19,6 @@ export default class MovingFormScreen extends React.Component {
 
   constructor (props) {
     super(props)
-
     this.data = {
       formtype: 1,
       moving_situation: '',
@@ -136,6 +135,8 @@ export default class MovingFormScreen extends React.Component {
 
   render () {
     const {movingSituationData} = this.state
+    const unit = CONFIG.userDetails.unit
+
     return (
       <View style={styles.container}>
         <Loader loading={this.state.loading} text={'Submitting'}/>
@@ -157,10 +158,7 @@ export default class MovingFormScreen extends React.Component {
               {this.data.moving_date == '' ? 'Moving Date' : this.data.moving_date}
             </Text>
           </TouchableOpacity>
-          {/*<TextInput style={styles.input} placeholder={'Moving Date'}*/}
-          {/*ref={ref => this.refTenancyFrom = ref}*/}
-          {/*onFocus={() => this.setState({showingCalendarPicker: true})}/>*/}
-          <TextInput style={styles.input} placeholder={'Unit'} value={'13-580'} editable={false}/>
+          <TextInput style={styles.input} placeholder={'Unit'} value={unit} editable={false}/>
           <TextInput style={styles.input} placeholder={'Email address'} value={'nguyentrung0904@gmail.com'}/>
           <TextInput style={styles.input} placeholder={'Description'}
                      onChangeText={(text) => this.data.description = text}/>
