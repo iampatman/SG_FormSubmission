@@ -11,11 +11,10 @@ export default query = (data) => {
       }
     }).then((response) => response.json()).then((responseJson) => {
       console.log(responseJson)
-      let list = responseJson.tdata
-      if (list == null) {
+      if (responseJson.detail != null) {
         reject(responseJson.detail)
       }
-      resolve(list)
+      resolve(responseJson.tdata)
     }).catch((error) => {
       console.log(error)
       reject('Server error, Please try again later')

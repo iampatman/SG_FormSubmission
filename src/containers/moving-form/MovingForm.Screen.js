@@ -10,6 +10,7 @@ import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker
 import Loader from '../../components/loader/Loader'
 import { loadMovingSituation, sendMovingForm } from '../../api/index'
 import moment from 'moment'
+import CONFIG from '../../utils/Config'
 
 export default class MovingFormScreen extends React.Component {
   static navigationOptions = {
@@ -21,9 +22,10 @@ export default class MovingFormScreen extends React.Component {
 
     this.data = {
       formtype: 1,
-      moving_situation: this.movingSituation,
-      movingDate: '',
+      moving_situation: '',
+      moving_date: '',
       description: '',
+      email: CONFIG.userDetails.email,
       engaging_contractor: {
         choose: false,
         mover_name: '',
@@ -44,9 +46,10 @@ export default class MovingFormScreen extends React.Component {
   }
 
   loadData = () => {
-    loadMovingSituation().then(({moving_situation}) => {
+    loadMovingSituation().then((tdata) => {
+      console.log('tdata ' + JSON.stringify(tdata))
       this.setState({
-        movingSituationData: moving_situation,
+        movingSituationData: tdata,
         loading: false
       })
     }).catch()
@@ -61,12 +64,14 @@ export default class MovingFormScreen extends React.Component {
     console.log('Data submitForm' + data)
     this.setState({loading: true})
     sendMovingForm(data).then((result) => {
-      setTimeout(() => {
-        this.setState({loading: false})
-        navigateToThankyou(navigation)
-      }, 3000)
+      this.setState({loading: false})
+      navigateToThankyou(navigation)
     }).catch((errorMsg) => {
-      Alert.alert('Error', errorMsg)
+      Alert.alert('Error', errorMsg, [{
+        text: 'OK', onPress: () => {
+          this.setState({loading: false})
+        }
+      }], {cancelable: false})
     })
   }
 
@@ -77,10 +82,10 @@ export default class MovingFormScreen extends React.Component {
 
   onCalendarChanged = (date: Date) => {
     let dateStr = date.toDateString()
-    let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('MM/DD/YYYY')
+    let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('YYYY/MM/DD')
     console.log('CalendarPicker ' + formattedStr)
     this.refTenancyFrom.setNativeProps({text: formattedStr})
-    this.data.movingDate = formattedStr
+    this.data.moving_date = formattedStr
     this.setState({
       showingCalendarPicker: false,
     })
@@ -105,12 +110,13 @@ export default class MovingFormScreen extends React.Component {
     } else {
       return null
     }
-
   }
 
   onMovingSituationSelected = (text) => {
     console.log('onPickerConfirm' + text[0])
-    this.data.movingSituation = text[0]
+    const {movingSituationData} = this.state
+    const selectedId = movingSituationData.filter((obj) => obj.name === text[0])[0].id
+    this.data.moving_situation = selectedId
     this.refTenantType.setNativeProps({text: text[0]})
   }
 
@@ -145,9 +151,15 @@ export default class MovingFormScreen extends React.Component {
             <Button type={'ghost'} onClick={this.uploadFile}>Upload file 47</Button>
             <Button type={'ghost'} onClick={this.uploadFile}>Upload file 65</Button>
           </View>
-          <TextInput style={styles.input} placeholder={'Moving Date'}
-                     ref={ref => this.refTenancyFrom = ref}
-                     onFocus={() => this.setState({showingCalendarPicker: true})}/>
+          <TouchableOpacity style={styles.datePickerView}
+                            onPress={() => this.setState({showingCalendarPicker: true})}>
+            <Text ref={ref => this.refTenancyFrom = ref}>
+              {this.data.moving_date == '' ? 'Moving Date' : this.data.moving_date}
+            </Text>
+          </TouchableOpacity>
+          {/*<TextInput style={styles.input} placeholder={'Moving Date'}*/}
+          {/*ref={ref => this.refTenancyFrom = ref}*/}
+          {/*onFocus={() => this.setState({showingCalendarPicker: true})}/>*/}
           <TextInput style={styles.input} placeholder={'Unit'} value={'13-580'} editable={false}/>
           <TextInput style={styles.input} placeholder={'Email address'} value={'nguyentrung0904@gmail.com'}/>
           <TextInput style={styles.input} placeholder={'Description'}

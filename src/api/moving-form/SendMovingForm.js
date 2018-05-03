@@ -3,7 +3,8 @@ import CONFIG from '../../utils/Config'
 
 export default query = async (data) => {
   return new Promise((resolve, reject) => {
-    let url = CONFIG.url + '/type/situation'
+    let url = CONFIG.url + '/submit'
+    console.log('Send moving form: ' + JSON.stringify({data}))
     fetch(url, {
       method: 'POST',
       headers: {
@@ -12,7 +13,10 @@ export default query = async (data) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({data})
-    }).then((response) => response.json()).then((responseJson) => {
+    }).then((response) => {
+      console.log(response)
+      return response.json()
+    }).then((responseJson) => {
       console.log(responseJson)
       if (responseJson.detail != null) {
         reject(responseJson.detail)

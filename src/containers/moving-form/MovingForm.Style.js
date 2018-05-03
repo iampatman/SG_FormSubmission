@@ -25,5 +25,13 @@ export default StyleSheet.create({
     borderRadius: 4
   },
   submitBtn: {position: 'absolute', bottom: 0, width: SCREEN_WIDTH, height: 65},
-
+  datePickerView: {
+    height: 50,
+    marginVertical: 8,
+    paddingHorizontal: 10,
+    borderWidth: 0.3,
+    borderColor: 'gray',
+    borderRadius: 4,
+    justifyContent: 'center'
+  }
 })
