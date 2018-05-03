@@ -114,7 +114,7 @@ export default class MovingFormScreen extends React.Component {
     this.refTenantType.setNativeProps({text: text[0]})
   }
 
-  uploadFile = () => {
+  uploadFile = (fileId) => {
     DocumentPicker.show({
       filetype: [DocumentPickerUtil.allFiles()],
     }, (error, res) => {
