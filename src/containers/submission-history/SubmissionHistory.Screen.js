@@ -64,7 +64,7 @@ export default class SubmissionHistoryScreen extends React.Component {
 
   renderItem = (item) => {
 
-    const highlight = item.state.toLowerCase() == 'requested'
+    const highlight = item.updated == true
     const textStyle = highlight ? null : styles.detailTextStyle1
     const icon = this.getIconFromFormTypeId(item.form_type.toString(), highlight)
     return (
