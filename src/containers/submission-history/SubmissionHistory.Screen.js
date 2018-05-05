@@ -22,7 +22,7 @@ export default class SubmissionHistoryScreen extends React.Component {
   }
 
   loadData = () => {
-    loadFormHistory().then(({data}) => {
+    loadFormHistory().then((data) => {
       console.log('SubmissionHistoryScreen data' + data)
       this.setState({
         data,
@@ -64,7 +64,7 @@ export default class SubmissionHistoryScreen extends React.Component {
 
   renderItem = (item) => {
 
-    const highlight = item.status.toLowerCase() == 'pending'
+    const highlight = item.state.toLowerCase() == 'requested'
     const textStyle = highlight ? null : styles.detailTextStyle1
     const icon = this.getIconFromFormTypeId(item.form_type.toString(), highlight)
     return (
@@ -75,7 +75,7 @@ export default class SubmissionHistoryScreen extends React.Component {
             {item.form_name}
           </Text>
           <Text style={textStyle}>
-            Status: {item.status}
+            Status: {item.state}
           </Text>
         </View>
         <View style={styles.itemRightContainer}>
@@ -98,36 +98,9 @@ export default class SubmissionHistoryScreen extends React.Component {
   }
 
   render () {
-    // const data = [
-    //   {
-    //     formId: '1',
-    //     formTypeId: '1',
-    //     formTypeName: 'Moving',
-    //     status: 'Pending',
-    //     date: '23/10/2018',
-    //     hasNewMessage: false
-    //   },
-    //   {
-    //     formId: '2',
-    //     formTypeId: '2',
-    //     formTypeName: 'Moving',
-    //     status: 'Pending',
-    //     date: '23/10/2018',
-    //     hasNewMessage: true
-    //   },
-    //   {
-    //     formId: '3',
-    //     formTypeId: '3',
-    //     formTypeName: 'Wallet Refund',
-    //     status: 'Approved',
-    //     date: '23/10/2018',
-    //     hasNewMessage: false
-    //   }
-    // ]
     const {loading, data} = this.state
 
     return (
-
       <View style={styles.container}>
         <Loader loading={loading}/>
         <FlatList data={data}
