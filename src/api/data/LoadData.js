@@ -1,9 +1,16 @@
-import mockResponse from './mocks/Mocks.MovingSituation.json'
 import CONFIG from '../../utils/Config'
 
-export default query = (data) => {
+export const DATA_TYPE = {
+  MOVING: 'moving',
+  RENTAL: 'rental',
+  RENOVATION: 'renovation',
+  VEHICLE: 'vehicle',
+  REFUND: 'refund'
+}
+
+export default query = (type: DATA_TYPE) => {
   return new Promise((resolve, reject) => {
-    let url = CONFIG.url + '/type/situation'
+    let url = CONFIG.url + '/type/' + type
     fetch(url, {
       method: 'GET',
       headers: {

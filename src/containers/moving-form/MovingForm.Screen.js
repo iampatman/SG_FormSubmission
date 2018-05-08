@@ -8,7 +8,7 @@ import { Button } from 'antd-mobile'
 import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
 import Loader from '../../components/loader/Loader'
-import { loadMovingSituation, sendMovingForm } from '../../api/index'
+import { submitForm, DATA_TYPE, loadData } from '../../api/index'
 import moment from 'moment'
 import CONFIG from '../../utils/Config'
 
@@ -21,7 +21,7 @@ export default class MovingFormScreen extends React.Component {
     super(props)
     this.data = {
       formtype: 1,
-      moving_situation: '',
+      type: '',
       moving_date: '',
       description: '',
       email: CONFIG.userDetails.email,
@@ -45,7 +45,7 @@ export default class MovingFormScreen extends React.Component {
   }
 
   loadData = () => {
-    loadMovingSituation().then((tdata) => {
+    loadData(DATA_TYPE.MOVING).then((tdata) => {
       console.log('tdata ' + JSON.stringify(tdata))
       this.setState({
         movingSituationData: tdata,
@@ -58,11 +58,11 @@ export default class MovingFormScreen extends React.Component {
     this.loadData()
   }
 
-  submitForm = (data) => {
+  submitFormData = (data) => {
     const {navigation} = this.props
     console.log('Data submitForm' + data)
     this.setState({loading: true})
-    sendMovingForm(data).then((result) => {
+    submitForm(data).then((result) => {
       this.setState({loading: false})
       navigateToThankyou(navigation)
     }).catch((errorMsg) => {
@@ -76,7 +76,7 @@ export default class MovingFormScreen extends React.Component {
 
   onSubmitPressed = () => {
     console.log('Data onSubmitPressed' + JSON.stringify(this.data))
-    this.submitForm(this.data)
+    this.submitFormData(this.data)
   }
 
   onCalendarChanged = (date: Date) => {
@@ -115,8 +115,8 @@ export default class MovingFormScreen extends React.Component {
     console.log('onPickerConfirm' + text[0])
     const {movingSituationData} = this.state
     const selectedId = movingSituationData.filter((obj) => obj.name === text[0])[0].id
-    this.data.moving_situation = selectedId
-    this.refTenantType.setNativeProps({text: text[0]})
+    this.data.type = selectedId
+    this.refMovingSituation.setNativeProps({text: text[0]})
   }
 
   uploadFile = (fileId) => {
@@ -141,7 +141,7 @@ export default class MovingFormScreen extends React.Component {
       <View style={styles.container}>
         <Loader loading={this.state.loading} text={'Submitting'}/>
         <ScrollView contentContainerStyle={{paddingBottom: 80}}>
-          <TextInput ref={ref => this.refTenantType = ref}
+          <TextInput ref={ref => this.refMovingSituation = ref}
                      style={styles.input}
                      placeholder={'Moving Situation'}
                      onFocus={() => showPicker({

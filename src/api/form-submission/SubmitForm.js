@@ -1,4 +1,3 @@
-import mockResponse from './mocks/Mock.SendMovingForm.json'
 import CONFIG from '../../utils/Config'
 
 export default query = async (data) => {

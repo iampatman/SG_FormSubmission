@@ -1,11 +1,14 @@
 import React from 'react'
-import { View, TextInput, Dimensions, Modal, Text, ScrollView } from 'react-native'
+import { View, TextInput, Dimensions, Modal, Alert, Text, ScrollView, TouchableOpacity } from 'react-native'
 import styles from './RentalForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
 import { Button } from 'antd-mobile'
 import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
+import { submitForm, DATA_TYPE, loadData } from '../../api/index'
+import Loader from '../../components/loader/Loader'
+import moment from 'moment'
 
 export default class RentalFormScreen extends React.Component {
   static navigationOptions = {
@@ -14,11 +17,35 @@ export default class RentalFormScreen extends React.Component {
 
   constructor (props) {
     super(props)
-    this.state = {
-      showingCalendarPicker: false,
-      tacChecked: false
+    this.data = {
+      formtype: 2,
+      type: '',
+      tenancy_start_date: '',
+      tenancy_end_date: '',
+      file_upload: []
     }
 
+    this.state = {
+      showingCalendarPicker: false,
+      showingMovingContractor: false,
+      tagChecked: false,
+      loading: true,
+      tenantTypes: []
+    }
+  }
+
+  componentDidMount () {
+    this.loadData()
+  }
+
+  loadData = () => {
+    loadData(DATA_TYPE.RENTAL).then((tdata) => {
+      console.log('tdata ' + JSON.stringify(tdata))
+      this.setState({
+        tenantTypes: tdata,
+        loading: false
+      })
+    }).catch()
   }
 
   onSubmitPressed = () => {
@@ -26,30 +53,75 @@ export default class RentalFormScreen extends React.Component {
     navigateToThankyou(navigation)
   }
 
-  onMovingSituationSelected = (text) => {
+  submitFormData = (data) => {
+    const {navigation} = this.props
+    console.log('Data submitForm' + data)
+    this.setState({loading: true})
+    submitForm(data).then((result) => {
+      this.setState({loading: false})
+      navigateToThankyou(navigation)
+    }).catch((errorMsg) => {
+      Alert.alert('Error', errorMsg, [{
+        text: 'OK', onPress: () => {
+          this.setState({loading: false})
+        }
+      }], {cancelable: false})
+    })
+  }
+
+  onSubmitPressed = () => {
+    console.log('Data onSubmitPressed' + JSON.stringify(this.data))
+    this.submitFormData(this.data)
+  }
+
+  onCalendarChanged = (date: Date) => {
+    let dateStr = date.toDateString()
+    let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('YYYY/MM/DD')
+    console.log('CalendarPicker ' + formattedStr)
+    this.refTenancyFrom.setNativeProps({text: formattedStr})
+    this.data.tenancy_start_date = formattedStr
+    this.data.tenancy_end_date = formattedStr
+    this.setState({
+      showingCalendarPicker: false,
+    })
+  }
+
+  onTenantTypeSelected = (text) => {
     console.log('onPickerConfirm' + text[0])
+    const {tenantTypes} = this.state
+    const selectedId = tenantTypes.filter((obj) => obj.name === text[0])[0].id
+    this.data.type = selectedId
     this.refTenantType.setNativeProps({text: text[0]})
   }
 
   render () {
+    const {tenantTypes} = this.state
+
     return (
       <View style={styles.container}>
+        <Loader loading={this.state.loading} text={'Submitting'}/>
         <ScrollView content={{paddingBottom: 80}}>
           <TextInput ref={ref => this.refTenantType = ref}
                      style={styles.input}
                      placeholder={'Tenant Type'}
                      onFocus={() => showPicker({
-                       pickerData: movingSituationData,
-                       onPickerConfirm: this.onMovingSituationSelected
+                       pickerData: tenantTypes.map((item) => item.name),
+                       onPickerConfirm: this.onTenantTypeSelected
                      })}/>
           <TextInput style={styles.input} placeholder={'Tenant Name'}/>
           <TextInput style={styles.input} placeholder={'Tenant Phone Number'}/>
-          <TextInput style={styles.input} placeholder={'Tenancy From'}
-                     ref={ref => this.refTenancyFrom = ref}
-                     onFocus={() => this.setState({showingCalendarPicker: true})}/>
-          <TextInput style={styles.input} placeholder={'Tenancy To'}
-                     ref={ref => this.refTenancyTo = ref}
-                     onFocus={() => this.setState({showingCalendarPicker: true})}/>
+          <TouchableOpacity style={styles.datePickerView}
+                            onPress={() => this.setState({showingCalendarPicker: true})}>
+            <Text ref={ref => this.refTenancyFrom = ref}>
+              {this.data.tenancy_start_date == '' ? 'Tenancy From' : this.data.tenancy_start_date}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.datePickerView}
+                            onPress={() => this.setState({showingCalendarPicker: true})}>
+            <Text ref={ref => this.refTenancyTo = ref}>
+              {this.data.tenancy_start_date == '' ? 'Tenancy To' : this.data.tenancy_start_date}
+            </Text>
+          </TouchableOpacity>
           <TextInput style={styles.input} placeholder={'Description'}/>
           <View style={{flexDirection: 'row'}}>
             <Checkbox onChange={(selected) => {
@@ -59,11 +131,7 @@ export default class RentalFormScreen extends React.Component {
             <Text>I agree to the terms and conditions</Text>
           </View>
           <CalendarPicker visible={this.state.showingCalendarPicker} title={'Moving date'}
-                          onChange={(data) => {
-                            console.log('CalendarPicker ' + data)
-                            this.refTenancyFrom.setNativeProps({text: data})
-                            this.setState({showingCalendarPicker: false})
-                          }}/>
+                          onChange={this.onCalendarChanged}/>
         </ScrollView>
         <Button disabled={!this.state.tacChecked}
                 type={'primary'}
