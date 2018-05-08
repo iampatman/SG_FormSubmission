@@ -58,7 +58,8 @@ export default class SubmissionHistoryScreen extends React.Component {
   onItemPressed = (item) => {
     const {navigation} = this.props
     navigateToFormDetail(navigation, {
-      formId: item.formId
+      formId: item.formId,
+      formType: item.form_type
     })
   }
 

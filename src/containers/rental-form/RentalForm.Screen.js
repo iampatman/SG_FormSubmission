@@ -10,6 +10,7 @@ import { submitForm, DATA_TYPE, loadData } from '../../api/index'
 import Loader from '../../components/loader/Loader'
 import moment from 'moment'
 import CONFIG from '../../utils/Config'
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
 
 export default class RentalFormScreen extends React.Component {
   static navigationOptions = {
@@ -92,7 +93,19 @@ export default class RentalFormScreen extends React.Component {
       showingCalendarPicker: false,
     })
   }
-
+  uploadFile = (fileId) => {
+    DocumentPicker.show({
+      filetype: [DocumentPickerUtil.allFiles()],
+    }, (error, res) => {
+      // Android
+      console.log(
+        res.uri,
+        res.type, // mime type
+        res.fileName,
+        res.fileSize
+      )
+    })
+  }
   onTenantTypeSelected = (text) => {
     console.log('onPickerConfirm' + text[0])
     const {tenantTypes} = this.state
@@ -133,6 +146,9 @@ export default class RentalFormScreen extends React.Component {
             </Text>
           </TouchableOpacity>
           <TextInput style={styles.input} placeholder={'Description'}/>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginVertical: 10}}>
+            <Button type={'ghost'} onClick={this.uploadFile}>Attach Agreement</Button>
+          </View>
           <View style={{flexDirection: 'row'}}>
             <Checkbox onChange={(selected) => {
               console.log('Checkbox onChange' + selected.target.checked)

@@ -5,7 +5,7 @@ import MovingFormScreen from '../containers/moving-form/MovingForm.Screen'
 import ThankyouScreen from '../containers/thankyou-submission/Thankyou.Screen'
 import SubmissionHistoryScreen from '../containers/submission-history/SubmissionHistory.Screen'
 import RentalFormScreen from '../containers/rental-form/RentalForm.Screen'
-import FormDetail from '../components/form-detail/FormDetail'
+import FormDetailScreen from '../containers/form-detail/FormDetail.Screen'
 
 export default StackNavigator({
   [n.FORM_MENU]: {screen: FormMenuScreen},
@@ -13,7 +13,7 @@ export default StackNavigator({
   [n.RENTAL]: {screen: RentalFormScreen},
   [n.THANK_YOU]: {screen: ThankyouScreen},
   [n.SUBMISSION_HISTORY]: {screen: SubmissionHistoryScreen},
-  [n.FORM_DETAIL]: {screen: FormDetail},
+  [n.FORM_DETAIL]: {screen: FormDetailScreen},
 }, {
   initialRouteName: n.FORM_MENU
 })
