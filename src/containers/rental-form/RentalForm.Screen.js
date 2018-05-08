@@ -9,6 +9,7 @@ import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper
 import { submitForm, DATA_TYPE, loadData } from '../../api/index'
 import Loader from '../../components/loader/Loader'
 import moment from 'moment'
+import CONFIG from '../../utils/Config'
 
 export default class RentalFormScreen extends React.Component {
   static navigationOptions = {
@@ -20,6 +21,7 @@ export default class RentalFormScreen extends React.Component {
     this.data = {
       formtype: 2,
       type: '',
+      email: CONFIG.userDetails.email,
       tenancy_start_date: '',
       tenancy_end_date: '',
       file_upload: []
@@ -30,6 +32,7 @@ export default class RentalFormScreen extends React.Component {
       showingMovingContractor: false,
       tagChecked: false,
       loading: true,
+      startDatePickerSelected: false,
       tenantTypes: []
     }
   }
@@ -79,8 +82,12 @@ export default class RentalFormScreen extends React.Component {
     let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('YYYY/MM/DD')
     console.log('CalendarPicker ' + formattedStr)
     this.refTenancyFrom.setNativeProps({text: formattedStr})
-    this.data.tenancy_start_date = formattedStr
-    this.data.tenancy_end_date = formattedStr
+    if (this.state.startDatePickerSelected == true) {
+      this.data.tenancy_start_date = formattedStr
+    } else {
+      this.data.tenancy_end_date = formattedStr
+
+    }
     this.setState({
       showingCalendarPicker: false,
     })
@@ -111,15 +118,18 @@ export default class RentalFormScreen extends React.Component {
           <TextInput style={styles.input} placeholder={'Tenant Name'}/>
           <TextInput style={styles.input} placeholder={'Tenant Phone Number'}/>
           <TouchableOpacity style={styles.datePickerView}
-                            onPress={() => this.setState({showingCalendarPicker: true})}>
+                            onPress={() => this.setState({showingCalendarPicker: true, startDatePickerSelected: true})}>
             <Text ref={ref => this.refTenancyFrom = ref}>
               {this.data.tenancy_start_date == '' ? 'Tenancy From' : this.data.tenancy_start_date}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.datePickerView}
-                            onPress={() => this.setState({showingCalendarPicker: true})}>
+                            onPress={() => this.setState({
+                              showingCalendarPicker: true,
+                              startDatePickerSelected: false
+                            })}>
             <Text ref={ref => this.refTenancyTo = ref}>
-              {this.data.tenancy_start_date == '' ? 'Tenancy To' : this.data.tenancy_start_date}
+              {this.data.tenancy_end_date == '' ? 'Tenancy To' : this.data.tenancy_end_date}
             </Text>
           </TouchableOpacity>
           <TextInput style={styles.input} placeholder={'Description'}/>
