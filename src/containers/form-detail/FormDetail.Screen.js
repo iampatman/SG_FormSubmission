@@ -2,12 +2,13 @@ import React from 'react'
 import {
   View,
   Text,
-  FlatList, SectionList
+  FlatList, SectionList, ScrollView
 } from 'react-native'
 import styles from './FormDetail.Style'
 import { loadFormDetail } from '../../api/index'
 import { extractMovingData } from './FormDetail.ExtractData'
 import Loader from '../../components/loader/Loader'
+import Messages from '../../components/messages/Messages'
 
 export default class FormDetailScreen extends React.Component {
   constructor (props) {
@@ -17,6 +18,7 @@ export default class FormDetailScreen extends React.Component {
       formId: params.formId,
       formType: 1,
       data: [],
+      message: [],
       loading: true
     }
   }
@@ -41,13 +43,14 @@ export default class FormDetailScreen extends React.Component {
   loadData = () => {
     loadFormDetail(this.state.formId).then((data) => {
       console.log('data: ' + JSON.stringify(data))
-      var extractedData = extractMovingData(data)
+      var extractedData = []
       switch (this.state.formType) {
         case 1:
           extractedData = extractMovingData(data)
       }
       console.log('extractedData ' + extractedData)
       this.setState({
+        message: data.message,
         data: extractedData,
         loading: false
       })
@@ -56,28 +59,18 @@ export default class FormDetailScreen extends React.Component {
     })
   }
 
-  // extractData = (obj) => {
-  //   var data = []
-  //   Object.keys(obj).forEach((key) => {
-  //     data.push({
-  //       key,
-  //       value: obj[key]
-  //     })
-  //   })
-  //   return data
-  // }
-
   render () {
-    const {data,loading} = this.state
+    const {data, message, loading} = this.state
     return (
-      <View style={styles.container}>
-        <Loader loading={loading} text={'Loading'} />
+      <ScrollView style={styles.container}>
+        <Loader loading={loading} text={'Loading'}/>
         <SectionList
           renderItem={this.renderItem}
           renderSectionHeader={({section: {title}}) => <Text style={styles.sectionText}>{title}</Text>}
           sections={data}
         />
-      </View>
+        <Messages data={message}/>
+      </ScrollView>
     )
   }
 }
