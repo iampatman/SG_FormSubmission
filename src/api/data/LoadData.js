@@ -5,7 +5,7 @@ export const DATA_TYPE = {
   RENTAL: 'rental',
   RENOVATION: 'renovation',
   VEHICLE: 'vehicle',
-  REFUND: 'refund'
+  REFUND: 'bank'
 }
 
 export default query = (type: DATA_TYPE) => {

@@ -31,7 +31,7 @@ export default class RefundFormScreen extends React.Component {
 
     this.state = {
       loading: true,
-      refundTypes: []
+      typeData: []
     }
   }
 
@@ -43,7 +43,7 @@ export default class RefundFormScreen extends React.Component {
     loadData(DATA_TYPE.REFUND).then((tdata) => {
       console.log('tdata ' + JSON.stringify(tdata))
       this.setState({
-        vehicleTypes: tdata,
+        typeData: tdata,
         loading: false
       })
     }).catch()
@@ -72,14 +72,14 @@ export default class RefundFormScreen extends React.Component {
 
   onTenantTypeSelected = (text) => {
     console.log('onPickerConfirm' + text[0])
-    const {refundTypes} = this.state
-    const selectedId = refundTypes.filter((obj) => obj.name === text[0])[0].id
+    const {typeData} = this.state
+    const selectedId = typeData.filter((obj) => obj.name === text[0])[0].id
     this.data.type = selectedId
     this.refVehicleType.setNativeProps({text: text[0]})
   }
 
   render () {
-    const {refundTypes} = this.state
+    const {typeData} = this.state
 
     return (
       <View style={styles.container}>
@@ -89,7 +89,7 @@ export default class RefundFormScreen extends React.Component {
                      style={styles.input}
                      placeholder={'Refund Type'}
                      onFocus={() => showPicker({
-                       pickerData: refundTypes.map((item) => item.name),
+                       pickerData: typeData.map((item) => item.name),
                        onPickerConfirm: this.onTenantTypeSelected
                      })}/>
           <TextInput style={styles.input} placeholder={'Amount'}

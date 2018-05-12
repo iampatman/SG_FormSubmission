@@ -34,7 +34,7 @@ export default class RentalFormScreen extends React.Component {
       tagChecked: false,
       loading: true,
       commenceDateSelected: false,
-      renovationTypes: []
+      typeData: []
     }
   }
 
@@ -46,7 +46,7 @@ export default class RentalFormScreen extends React.Component {
     loadData(DATA_TYPE.RENTAL).then((tdata) => {
       console.log('tdata ' + JSON.stringify(tdata))
       this.setState({
-        vehicleTypes: tdata,
+        typeData: tdata,
         loading: false
       })
     }).catch()
@@ -108,14 +108,14 @@ export default class RentalFormScreen extends React.Component {
   }
   onTenantTypeSelected = (text) => {
     console.log('onPickerConfirm' + text[0])
-    const {renovationTypes} = this.state
-    const selectedId = tenantTypes.filter((obj) => obj.name === text[0])[0].id
+    const {typeData} = this.state
+    const selectedId = typeData.filter((obj) => obj.name === text[0])[0].id
     this.data.type = selectedId
     this.refVehicleType.setNativeProps({text: text[0]})
   }
 
   render () {
-    const {renovationTypes} = this.state
+    const {typeData} = this.state
 
     return (
       <View style={styles.container}>
@@ -125,7 +125,7 @@ export default class RentalFormScreen extends React.Component {
                      style={styles.input}
                      placeholder={'Tenant Type'}
                      onFocus={() => showPicker({
-                       pickerData: tenantTypes.map((item) => item.name),
+                       pickerData: typeData.map((item) => item.name),
                        onPickerConfirm: this.onTenantTypeSelected
                      })}/>
           <TouchableOpacity style={styles.datePickerView}
