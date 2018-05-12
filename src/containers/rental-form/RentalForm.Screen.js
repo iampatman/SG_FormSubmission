@@ -128,8 +128,6 @@ export default class RentalFormScreen extends React.Component {
                        pickerData: tenantTypes.map((item) => item.name),
                        onPickerConfirm: this.onTenantTypeSelected
                      })}/>
-          <TextInput style={styles.input} placeholder={'Tenant Name'}/>
-          <TextInput style={styles.input} placeholder={'Tenant Phone Number'}/>
           <TouchableOpacity style={styles.datePickerView}
                             onPress={() => this.setState({showingCalendarPicker: true, startDatePickerSelected: true})}>
             <Text ref={ref => this.refTenancyFrom = ref}>
@@ -145,8 +143,8 @@ export default class RentalFormScreen extends React.Component {
               {this.data.tenancy_end_date == '' ? 'Tenancy To' : this.data.tenancy_end_date}
             </Text>
           </TouchableOpacity>
-          <TextInput style={styles.input} placeholder={'Description'}/>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginVertical: 10}}>
+          <View
+            style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginVertical: 10}}>
             <Button type={'ghost'} onClick={this.uploadFile}>Attach Agreement</Button>
           </View>
           <View style={{flexDirection: 'row'}}>

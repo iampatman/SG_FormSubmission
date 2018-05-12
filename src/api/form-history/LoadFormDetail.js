@@ -3,7 +3,7 @@ import CONFIG from '../../utils/Config'
 
 export default query = async (data) => {
   return new Promise((resolve, reject) => {
-    let url = CONFIG.url + '/detail?formtype=1&id=120&only_message=0'
+    let url = CONFIG.url + '/detail?formtype=' + data.formType + '&id=' + data.formId + '&only_message=0'
     fetch(url, {
       method: 'GET',
       headers: {

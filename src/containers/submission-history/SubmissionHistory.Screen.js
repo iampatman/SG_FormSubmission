@@ -58,7 +58,7 @@ export default class SubmissionHistoryScreen extends React.Component {
   onItemPressed = (item) => {
     const {navigation} = this.props
     navigateToFormDetail(navigation, {
-      formId: item.formId,
+      formId: item.formid,
       formType: item.form_type
     })
   }
@@ -103,7 +103,7 @@ export default class SubmissionHistoryScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Loader loading={loading}/>
+        <Loader loading={loading} text={'Loading'}/>
         <FlatList data={data}
                   renderItem={(item) => this.renderItem(item.item)}
                   keyExtractor={(item) => item.id.toString()}

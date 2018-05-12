@@ -2,11 +2,13 @@ import React from 'react'
 import {
   View,
   Text,
-  FlatList, SectionList, TextInput
+  FlatList,
+  SectionList,
+  TextInput, Alert
 } from 'react-native'
 import styles from './Messages.Style'
-import { loadFormDetail } from '../../api/index'
 import { Button } from 'antd-mobile'
+import { sendMessageQuery } from '../../api/index'
 
 export default class Messages extends React.Component {
   constructor (props) {
@@ -14,8 +16,10 @@ export default class Messages extends React.Component {
     console.log('messages props' + JSON.stringify(props))
     // const {params} = this.props.navigation.state
     this.state = {
-      // formId: params.formId,
+      formId: props.formId,
+      formType: props.formType,
       newmsg: '',
+      refreshing: false,
       data: props.data,
       // onSend: params.onSend
     }
@@ -26,6 +30,33 @@ export default class Messages extends React.Component {
       data: newProps.data
     })
   }
+
+  setReloading = (refreshing) => {
+    this.setState({
+      refreshing
+    })
+  }
+
+  sendMessage = (message) => {
+    const {formId, formType} = this.state
+    const param = {id: formId, formtype: formType, message}
+    // const param = {id: 120, formtype: 1, message}
+    this.setReloading(true)
+    sendMessageQuery(param).then((data) => {
+      this.setReloading(false)
+      this.setState({
+        data: data
+      })
+    }).catch(error => {
+      this.setReloading(false)
+      Alert.alert('Error', error)
+    })
+  }
+
+  onSendMessagePressed = () => {
+    this.sendMessage(this.state.newmsg)
+  }
+
   renderItem = ({item, index}) => {
     return (
       <View style={styles.itemContainer}>
@@ -41,7 +72,7 @@ export default class Messages extends React.Component {
   }
 
   render () {
-    const {data} = this.state
+    const {data, refreshing} = this.state
     console.log('messages data' + JSON.stringify(data))
     return (
       <View style={styles.container}>
@@ -52,11 +83,14 @@ export default class Messages extends React.Component {
           <Button disabled={this.state.newmsg == ''}
                   type={'primary'}
                   style={styles.submitBtn}
-                  onClick={this.onSubmitPressed}>Send</Button>
+                  onClick={this.onSendMessagePressed}>Send</Button>
         </View>
         <FlatList
           data={data}
           renderItem={this.renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          refreshing={refreshing}
+          onRefresh={() => {}}
         />
       </View>
     )

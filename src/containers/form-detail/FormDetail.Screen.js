@@ -2,7 +2,7 @@ import React from 'react'
 import {
   View,
   Text,
-  FlatList, SectionList, ScrollView
+  FlatList, SectionList, ScrollView, Alert
 } from 'react-native'
 import styles from './FormDetail.Style'
 import { loadFormDetail } from '../../api/index'
@@ -14,9 +14,10 @@ export default class FormDetailScreen extends React.Component {
   constructor (props) {
     super(props)
     const {params} = this.props.navigation.state
+    console.log('FormDetailScreen Params ' + JSON.stringify(params))
     this.state = {
       formId: params.formId,
-      formType: 1,
+      formType: params.formType,
       data: [],
       message: [],
       loading: true
@@ -40,27 +41,35 @@ export default class FormDetailScreen extends React.Component {
     this.loadData()
   }
 
+  setLoading = (value) => {
+    this.setState({
+      loading: value
+    })
+  }
   loadData = () => {
-    loadFormDetail(this.state.formId).then((data) => {
+    const {formId, formType} = this.state
+    loadFormDetail({formId, formType}).then((data) => {
       console.log('data: ' + JSON.stringify(data))
       var extractedData = []
       switch (this.state.formType) {
         case 1:
           extractedData = extractMovingData(data)
       }
-      console.log('extractedData ' + extractedData)
+      // console.log('extractedData ' + extractedData)
       this.setState({
         message: data.message,
         data: extractedData,
         loading: false
       })
     }).catch((error) => {
+      this.setLoading(false)
+      // Alert.alert('Error', error)
       console.log(error)
     })
   }
 
   render () {
-    const {data, message, loading} = this.state
+    const {data, message, loading, formId, formType} = this.state
     return (
       <ScrollView style={styles.container}>
         <Loader loading={loading} text={'Loading'}/>
@@ -69,7 +78,7 @@ export default class FormDetailScreen extends React.Component {
           renderSectionHeader={({section: {title}}) => <Text style={styles.sectionText}>{title}</Text>}
           sections={data}
         />
-        <Messages data={message}/>
+        <Messages data={message} formId={formId} formType={formType}/>
       </ScrollView>
     )
   }
