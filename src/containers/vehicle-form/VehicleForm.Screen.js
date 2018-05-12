@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, TextInput, Dimensions, Modal, Alert, Text, ScrollView, TouchableOpacity } from 'react-native'
-import styles from './RentalForm.Style'
+import styles from './VehicleForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
@@ -12,19 +12,20 @@ import moment from 'moment'
 import CONFIG from '../../utils/Config'
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
 
-export default class RentalFormScreen extends React.Component {
+export default class VehicleFormScreen extends React.Component {
   static navigationOptions = {
-    title: 'Rental'
+    title: 'Vehicle'
   }
 
   constructor (props) {
     super(props)
     this.data = {
-      formtype: 2,
+      formtype: 4,
       type: '',
       email: CONFIG.userDetails.email,
-      tenancy_start_date: '',
-      tenancy_end_date: '',
+      usage_start_date: '',
+      usage_end_date: '',
+      vehicle_no:'',
       file_upload: []
     }
 
@@ -34,7 +35,7 @@ export default class RentalFormScreen extends React.Component {
       tagChecked: false,
       loading: true,
       commenceDateSelected: false,
-      renovationTypes: []
+      vehicleTypes: []
     }
   }
 
@@ -43,18 +44,13 @@ export default class RentalFormScreen extends React.Component {
   }
 
   loadData = () => {
-    loadData(DATA_TYPE.RENTAL).then((tdata) => {
+    loadData(DATA_TYPE.VEHICLE).then((tdata) => {
       console.log('tdata ' + JSON.stringify(tdata))
       this.setState({
         vehicleTypes: tdata,
         loading: false
       })
     }).catch()
-  }
-
-  onSubmitPressed = () => {
-    const {navigation} = this.props
-    navigateToThankyou(navigation)
   }
 
   submitFormData = (data) => {
@@ -81,41 +77,41 @@ export default class RentalFormScreen extends React.Component {
   onCalendarChanged = (date: Date) => {
     let dateStr = date.toDateString()
     let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('YYYY/MM/DD')
-    console.log('CalendarPicker ' + formattedStr)
+    // console.log('CalendarPicker ' + formattedStr)
     this.refTenancyFrom.setNativeProps({text: formattedStr})
     if (this.state.commenceDateSelected == true) {
-      this.data.tenancy_start_date = formattedStr
+      this.data.usage_start_date = formattedStr
     } else {
-      this.data.tenancy_end_date = formattedStr
+      this.data.usage_end_date = formattedStr
 
     }
     this.setState({
       showingCalendarPicker: false,
     })
   }
-  uploadFile = (fileId) => {
-    DocumentPicker.show({
-      filetype: [DocumentPickerUtil.allFiles()],
-    }, (error, res) => {
-      // Android
-      console.log(
-        res.uri,
-        res.type, // mime type
-        res.fileName,
-        res.fileSize
-      )
-    })
-  }
+  // uploadFile = (fileId) => {
+  //   DocumentPicker.show({
+  //     filetype: [DocumentPickerUtil.allFiles()],
+  //   }, (error, res) => {
+  //     // Android
+  //     console.log(
+  //       res.uri,
+  //       res.type, // mime type
+  //       res.fileName,
+  //       res.fileSize
+  //     )
+  //   })
+  // }
   onTenantTypeSelected = (text) => {
     console.log('onPickerConfirm' + text[0])
-    const {renovationTypes} = this.state
-    const selectedId = tenantTypes.filter((obj) => obj.name === text[0])[0].id
+    const {vehicleTypes} = this.state
+    const selectedId = vehicleTypes.filter((obj) => obj.name === text[0])[0].id
     this.data.type = selectedId
     this.refVehicleType.setNativeProps({text: text[0]})
   }
 
   render () {
-    const {renovationTypes} = this.state
+    const {vehicleTypes} = this.state
 
     return (
       <View style={styles.container}>
@@ -123,44 +119,41 @@ export default class RentalFormScreen extends React.Component {
         <ScrollView content={{paddingBottom: 80}}>
           <TextInput ref={ref => this.refVehicleType = ref}
                      style={styles.input}
-                     placeholder={'Tenant Type'}
+                     placeholder={'Vehicle Type'}
                      onFocus={() => showPicker({
-                       pickerData: tenantTypes.map((item) => item.name),
+                       pickerData: vehicleTypes.map((item) => item.name),
                        onPickerConfirm: this.onTenantTypeSelected
                      })}/>
+          <TextInput style={styles.input} placeholder={'Vehcle Number'}
+                     onChangeText={(text) => {this.data.vehicle_no = text}}/>
+
           <TouchableOpacity style={styles.datePickerView}
                             onPress={() => this.setState({showingCalendarPicker: true, commenceDateSelected: true})}>
             <Text ref={ref => this.refTenancyFrom = ref}>
-              {this.data.tenancy_start_date == '' ? 'Tenancy From' : this.data.tenancy_start_date}
+              {this.data.usage_start_date == '' ? 'Usage Start Date' : this.data.usage_start_date}
             </Text>
           </TouchableOpacity>
+
           <TouchableOpacity style={styles.datePickerView}
                             onPress={() => this.setState({
                               showingCalendarPicker: true,
                               commenceDateSelected: false
                             })}>
-            <Text ref={ref => this.refTenancyTo = ref}>
-              {this.data.tenancy_end_date == '' ? 'Tenancy To' : this.data.tenancy_end_date}
+            <Text>
+              {this.data.usage_end_date == '' ? 'Usage Start Date' : this.data.usage_end_date}
             </Text>
           </TouchableOpacity>
           <View
             style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginVertical: 10}}>
             <Button type={'ghost'} onClick={this.uploadFile}>Attach Agreement</Button>
           </View>
-          <View style={{flexDirection: 'row'}}>
-            <Checkbox onChange={(selected) => {
-              console.log('Checkbox onChange' + selected.target.checked)
-              this.setState({tacChecked: selected.target.checked})
-            }}/>
-            <Text>I agree to the terms and conditions</Text>
-          </View>
-          <CalendarPicker visible={this.state.showingCalendarPicker} title={'Moving date'}
+          <CalendarPicker visible={this.state.showingCalendarPicker} title={'Select Date'}
                           onChange={this.onCalendarChanged}/>
         </ScrollView>
-        <Button disabled={!this.state.tacChecked}
-                type={'primary'}
-                style={styles.submitBtn}
-                onClick={this.onSubmitPressed}>SUBMIT</Button>
+        <Button
+          type={'primary'}
+          style={styles.submitBtn}
+          onClick={this.onSubmitPressed}>SUBMIT</Button>
       </View>
     )
   }

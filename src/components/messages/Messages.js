@@ -40,12 +40,13 @@ export default class Messages extends React.Component {
   sendMessage = (message) => {
     const {formId, formType} = this.state
     const param = {id: formId, formtype: formType, message}
-    // const param = {id: 120, formtype: 1, message}
     this.setReloading(true)
+
     sendMessageQuery(param).then((data) => {
       this.setReloading(false)
       this.setState({
-        data: data
+        data: data,
+        newmsg: ''
       })
     }).catch(error => {
       this.setReloading(false)
@@ -79,6 +80,7 @@ export default class Messages extends React.Component {
         <View style={styles.sendMsgContainer}>
           <TextInput style={styles.messageInput}
                      placeholder={'Type your message here'}
+                     value={this.state.newmsg}
                      onChangeText={(text) => this.setState({newmsg: text})}/>
           <Button disabled={this.state.newmsg == ''}
                   type={'primary'}

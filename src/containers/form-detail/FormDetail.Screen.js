@@ -6,7 +6,10 @@ import {
 } from 'react-native'
 import styles from './FormDetail.Style'
 import { loadFormDetail } from '../../api/index'
-import { extractMovingData } from './FormDetail.ExtractData'
+import {
+  extractMovingData, extractRenovationData, extractRentalData,
+  extractVehicleData
+} from './FormDetail.ExtractData'
 import Loader from '../../components/loader/Loader'
 import Messages from '../../components/messages/Messages'
 
@@ -54,6 +57,17 @@ export default class FormDetailScreen extends React.Component {
       switch (this.state.formType) {
         case 1:
           extractedData = extractMovingData(data)
+          break;
+        case 2:
+          extractedData = extractRentalData(data)
+          break
+        case 3:
+          extractedData = extractRenovationData(data)
+          break
+        case 4:
+          extractedData = extractVehicleData(data)
+          break
+
       }
       // console.log('extractedData ' + extractedData)
       this.setState({

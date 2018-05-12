@@ -3,8 +3,8 @@ import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
 import styles from './FormMenu.Style'
 import listData from './FormMenu.Form'
 import {
-  navigateToHistory, navigateToMovingForm,
-  navigateToRentalForm
+  navigateToHistory, navigateToMovingForm, navigateToRenovationForm,
+  navigateToRentalForm, navigateToVehicleForm
 } from '../../navigation/helpers/Nav.FormMenu.Helper'
 
 export default class FormMenuScreen extends React.Component {
@@ -20,6 +20,13 @@ export default class FormMenuScreen extends React.Component {
         return
       case 2:
         navigateToRentalForm(navigation)
+        return
+      case 3:
+        navigateToRenovationForm(navigation)
+        return
+      case 4:
+        navigateToVehicleForm(navigation)
+        return
     }
   }
 
