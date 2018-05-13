@@ -25,7 +25,7 @@ export default [
   },
   {
     id: 5,
-    title: 'Renovation',
+    title: 'Refund',
     icon: require('../../assets/icons/ic_wallet_blue.png')
   }
 ]

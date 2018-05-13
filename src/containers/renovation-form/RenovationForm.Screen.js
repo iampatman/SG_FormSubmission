@@ -22,7 +22,7 @@ export default class RenovationFormScreen extends React.Component {
     this.data = {
       formtype: 3,
       type: '',
-      email: CONFIG.userDetails.email,
+      email: '',
       commence_date: '',
       completed_date: '',
       engaging_contractor: {
@@ -51,10 +51,11 @@ export default class RenovationFormScreen extends React.Component {
   }
 
   loadData = () => {
-    loadData(DATA_TYPE.RENOVATION).then((tdata) => {
-      console.log('tdata ' + JSON.stringify(tdata))
+    loadData(DATA_TYPE.RENOVATION).then((data) => {
+      console.log('tdata ' + JSON.stringify(data))
+      this.data.email = data.email
       this.setState({
-        typeData: tdata,
+        typeData: data.tdata,
         loading: false
       })
     }).catch()

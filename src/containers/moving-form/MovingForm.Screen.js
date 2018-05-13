@@ -24,7 +24,8 @@ export default class MovingFormScreen extends React.Component {
       type: '',
       moving_date: '',
       description: '',
-      email: CONFIG.userDetails.email,
+      email: '',
+      unit_no: '',
       engaging_contractor: {
         choose: false,
         mover_name: '',
@@ -37,18 +38,24 @@ export default class MovingFormScreen extends React.Component {
     }
 
     this.state = {
+      unit_no: '',
+      email: '',
       showingCalendarPicker: false,
       showingMovingContractor: false,
       loading: true,
-      movingSituationData: []
+      movingSituationData: [],
+      selectedType: 1
     }
   }
 
   loadData = () => {
-    loadData(DATA_TYPE.MOVING).then((tdata) => {
-      console.log('tdata ' + JSON.stringify(tdata))
+    loadData(DATA_TYPE.MOVING).then((data) => {
+      console.log('tdata ' + JSON.stringify(data))
+      this.data.email = data.email
       this.setState({
-        movingSituationData: tdata,
+        movingSituationData: data.tdata,
+        email: data.email,
+        unit_no: data.unit_no,
         loading: false
       })
     }).catch()
@@ -115,6 +122,9 @@ export default class MovingFormScreen extends React.Component {
     console.log('onPickerConfirm' + text[0])
     const {movingSituationData} = this.state
     const selectedId = movingSituationData.filter((obj) => obj.name === text[0])[0].id
+    this.setState({
+      selectedType: selectedId
+    })
     this.data.type = selectedId
     this.refMovingSituation.setNativeProps({text: text[0]})
   }
@@ -133,9 +143,15 @@ export default class MovingFormScreen extends React.Component {
     })
   }
 
+  onEmailChange = (text) => {
+    this.data.email = text
+    this.setState({
+      email: text
+    })
+  }
+
   render () {
-    const {movingSituationData} = this.state
-    const unit = CONFIG.userDetails.unit
+    const {movingSituationData, email, unit_no,selectedType} = this.state
 
     return (
       <View style={styles.container}>
@@ -148,18 +164,20 @@ export default class MovingFormScreen extends React.Component {
                        pickerData: movingSituationData.map((item) => item.name),
                        onPickerConfirm: this.onMovingSituationSelected
                      })}/>
-          <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20}}>
+          {selectedType === 3 ? <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20}}>
             <Button type={'ghost'} onClick={this.uploadFile}>Upload file 47</Button>
             <Button type={'ghost'} onClick={this.uploadFile}>Upload file 65</Button>
-          </View>
+            </View> : null}
+
           <TouchableOpacity style={styles.datePickerView}
                             onPress={() => this.setState({showingCalendarPicker: true})}>
             <Text ref={ref => this.refTenancyFrom = ref}>
               {this.data.moving_date == '' ? 'Moving Date' : this.data.moving_date}
             </Text>
           </TouchableOpacity>
-          <TextInput style={styles.input} placeholder={'Unit'} value={unit} editable={false}/>
-          <TextInput style={styles.input} placeholder={'Email address'} value={'nguyentrung0904@gmail.com'}/>
+          <TextInput style={styles.input} placeholder={'Unit'} value={unit_no} editable={false}/>
+          <TextInput style={styles.input} placeholder={'Email address'} value={email}
+                     onChangeText={this.onEmailChange}/>
           <TextInput style={styles.input} placeholder={'Description'}
                      onChangeText={(text) => this.data.description = text}/>
           <View style={{flexDirection: 'row'}}>

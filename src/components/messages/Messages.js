@@ -58,15 +58,15 @@ export default class Messages extends React.Component {
     this.sendMessage(this.state.newmsg)
   }
 
-  renderItem = ({item, index}) => {
+  renderItem = ({item}) => {
     return (
       <View style={styles.itemContainer}>
         <View style={styles.itemTitleContainer}>
-          <Text style={styles.itemTitleText} key={index}>{item.create_by}</Text>
+          <Text style={styles.itemTitleText}>{item.create_by}</Text>
         </View>
         <View style={styles.itemDetailContainer}>
-          <Text key={index}>{item.detail}</Text>
-          <Text style={styles.timeTagText} key={index}>{item.created_time}</Text>
+          <Text>{item.detail}</Text>
+          <Text style={styles.timeTagText}>{item.created_time}</Text>
         </View>
       </View>
     )

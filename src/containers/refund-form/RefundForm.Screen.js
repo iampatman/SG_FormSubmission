@@ -22,7 +22,7 @@ export default class RefundFormScreen extends React.Component {
     this.data = {
       formtype: 5,
       type: '',
-      email: CONFIG.userDetails.email,
+      email: '',
       amount: '',
       account_name: '',
       account_no: '',
@@ -40,14 +40,25 @@ export default class RefundFormScreen extends React.Component {
   }
 
   loadData = () => {
-    loadData(DATA_TYPE.REFUND).then((tdata) => {
-      console.log('tdata ' + JSON.stringify(tdata))
+    loadData(DATA_TYPE.REFUND).then((data) => {
+      console.log('tdata ' + JSON.stringify(data))
+      this.data.email = data.email
       this.setState({
-        typeData: tdata,
+        typeData: data.tdata,
         loading: false
       })
     }).catch()
   }
+
+  // loadData = () => {
+  //   loadData(DATA_TYPE.REFUND).then((tdata) => {
+  //     console.log('tdata ' + JSON.stringify(tdata))
+  //     this.setState({
+  //       typeData: tdata,
+  //       loading: false
+  //     })
+  //   }).catch()
+  // }
 
   submitFormData = (data) => {
     const {navigation} = this.props

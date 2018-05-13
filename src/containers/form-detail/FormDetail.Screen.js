@@ -52,7 +52,7 @@ export default class FormDetailScreen extends React.Component {
   loadData = () => {
     const {formId, formType} = this.state
     loadFormDetail({formId, formType}).then((data) => {
-      console.log('data: ' + JSON.stringify(data))
+      // console.log('data: ' + JSON.stringify(data))
       var extractedData = []
       switch (this.state.formType) {
         case 1:

@@ -21,7 +21,7 @@ export default query = (type: DATA_TYPE) => {
       if (responseJson.detail != null) {
         reject(responseJson.detail)
       }
-      resolve(responseJson.tdata)
+      resolve(responseJson)
     }).catch((error) => {
       console.log(error)
       reject('Server error, Please try again later')

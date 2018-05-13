@@ -22,7 +22,7 @@ export default class VehicleFormScreen extends React.Component {
     this.data = {
       formtype: 4,
       type: '',
-      email: CONFIG.userDetails.email,
+      email: '',
       usage_start_date: '',
       usage_end_date: '',
       vehicle_no:'',
@@ -43,15 +43,27 @@ export default class VehicleFormScreen extends React.Component {
     this.loadData()
   }
 
+
   loadData = () => {
-    loadData(DATA_TYPE.VEHICLE).then((tdata) => {
-      console.log('tdata ' + JSON.stringify(tdata))
+    loadData(DATA_TYPE.VEHICLE).then((data) => {
+      console.log('tdata ' + JSON.stringify(data))
+      this.data.email = data.email
       this.setState({
-        vehicleTypes: tdata,
+        vehicleTypes: data.tdata,
         loading: false
       })
     }).catch()
   }
+
+  // loadData = () => {
+  //   loadData(DATA_TYPE.VEHICLE).then((tdata) => {
+  //     console.log('tdata ' + JSON.stringify(tdata))
+  //     this.setState({
+  //       vehicleTypes: tdata,
+  //       loading: false
+  //     })
+  //   }).catch()
+  // }
 
   submitFormData = (data) => {
     const {navigation} = this.props

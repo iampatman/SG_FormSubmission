@@ -22,7 +22,7 @@ export default class RentalFormScreen extends React.Component {
     this.data = {
       formtype: 2,
       type: '',
-      email: CONFIG.userDetails.email,
+      email: '',
       tenancy_start_date: '',
       tenancy_end_date: '',
       file_upload: []
@@ -43,10 +43,11 @@ export default class RentalFormScreen extends React.Component {
   }
 
   loadData = () => {
-    loadData(DATA_TYPE.RENTAL).then((tdata) => {
-      console.log('tdata ' + JSON.stringify(tdata))
+    loadData(DATA_TYPE.RENTAL).then((data) => {
+      console.log('tdata ' + JSON.stringify(data))
+      this.data.email = data.email
       this.setState({
-        typeData: tdata,
+        typeData: data.tdata,
         loading: false
       })
     }).catch()
