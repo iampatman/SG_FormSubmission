@@ -178,8 +178,8 @@ export default class MovingFormScreen extends React.Component {
           <TextInput style={styles.input} placeholder={'Unit'} value={unit_no} editable={false}/>
           <TextInput style={styles.input} placeholder={'Email address'} value={email}
                      onChangeText={this.onEmailChange}/>
-          <TextInput style={styles.input} placeholder={'Description'}
-                     onChangeText={(text) => this.data.description = text}/>
+          {/*<TextInput style={styles.input} placeholder={'Description'}*/}
+                     {/*onChangeText={(text) => this.data.description = text}/>*/}
           <View style={{flexDirection: 'row'}}>
             <Text>Engaging Contractor/Mover</Text>
             <Checkbox onChange={(selected) => {
