@@ -310,3 +310,58 @@ export const extractVehicleData = (data) => {
   console.log('extractMovingData result ' + JSON.stringify(result))
   return result
 }
+
+export const extractRefundData = (data) => {
+  const result =
+    [
+      {
+        title: 'Basic Information',
+        data: [
+          {
+            key: 'Submission Date',
+            value: data.basic_information.submit_date,
+          },
+          {
+            key: 'Reject Date',
+            value: data.basic_information.rejected_date,
+          },
+          {
+            key: 'Status',
+            value: data.basic_information.state,
+          },
+          {
+            key: 'Check Number',
+            value: data.basic_information.check_no,
+          }
+          ,
+          {
+            key: 'Deposit',
+            value: data.basic_information.deposit,
+          }
+        ]
+      },
+      {
+        title: 'Refund Information',
+        data: [
+          {
+            key: 'Bank',
+            value: data.refund_information.bank,
+          },
+          {
+            key: 'Account Name',
+            value: data.refund_information.account_name,
+          },
+          {
+            key: 'Account No',
+            value: data.refund_information.account_no,
+          }
+          ,
+          {
+            key: 'Amount',
+            value: data.refund_information.amount,
+          }
+        ]
+      }
+    ]
+  return result
+}

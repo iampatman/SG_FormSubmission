@@ -7,7 +7,7 @@ import {
 import styles from './FormDetail.Style'
 import { loadFormDetail } from '../../api/index'
 import {
-  extractMovingData, extractRenovationData, extractRentalData,
+  extractMovingData, extractRefundData, extractRenovationData, extractRentalData,
   extractVehicleData
 } from './FormDetail.ExtractData'
 import Loader from '../../components/loader/Loader'
@@ -57,7 +57,7 @@ export default class FormDetailScreen extends React.Component {
       switch (this.state.formType) {
         case 1:
           extractedData = extractMovingData(data)
-          break;
+          break
         case 2:
           extractedData = extractRentalData(data)
           break
@@ -66,6 +66,9 @@ export default class FormDetailScreen extends React.Component {
           break
         case 4:
           extractedData = extractVehicleData(data)
+          break
+        case 5:
+          extractedData = extractRefundData(data)
           break
 
       }

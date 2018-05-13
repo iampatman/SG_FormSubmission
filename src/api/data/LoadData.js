@@ -1,7 +1,7 @@
 import CONFIG from '../../utils/Config'
 
 export const DATA_TYPE = {
-  MOVING: 'moving',
+  MOVING: 'situation',
   RENTAL: 'rental',
   RENOVATION: 'renovation',
   VEHICLE: 'vehicle',
