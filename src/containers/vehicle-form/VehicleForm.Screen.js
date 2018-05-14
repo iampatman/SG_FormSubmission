@@ -23,6 +23,7 @@ export default class VehicleFormScreen extends React.Component {
       formtype: 4,
       type: '',
       email: '',
+      unit_no: '',
       usage_start_date: '',
       usage_end_date: '',
       vehicle_no:'',
@@ -34,6 +35,7 @@ export default class VehicleFormScreen extends React.Component {
       showingMovingContractor: false,
       tagChecked: false,
       loading: true,
+      loadingText: 'Loading',
       commenceDateSelected: false,
       vehicleTypes: []
     }
@@ -48,6 +50,7 @@ export default class VehicleFormScreen extends React.Component {
     loadData(DATA_TYPE.VEHICLE).then((data) => {
       console.log('tdata ' + JSON.stringify(data))
       this.data.email = data.email
+      this.data.unit_no = data.unit_no
       this.setState({
         vehicleTypes: data.tdata,
         loading: false
@@ -65,17 +68,23 @@ export default class VehicleFormScreen extends React.Component {
   //   }).catch()
   // }
 
+  setLoading = (loading, loadingText) => {
+    this.setState({
+      loading, loadingText
+    })
+  }
+
   submitFormData = (data) => {
     const {navigation} = this.props
     console.log('Data submitForm' + data)
-    this.setState({loading: true})
+    this.setLoading(true, 'Submitting')
     submitForm(data).then((result) => {
-      this.setState({loading: false})
+      this.setLoading(false)
       navigateToThankyou(navigation)
     }).catch((errorMsg) => {
       Alert.alert('Error', errorMsg, [{
         text: 'OK', onPress: () => {
-          this.setState({loading: false})
+          this.setLoading(false)
         }
       }], {cancelable: false})
     })
@@ -123,11 +132,11 @@ export default class VehicleFormScreen extends React.Component {
   }
 
   render () {
-    const {vehicleTypes} = this.state
+    const {vehicleTypes, loadingText, loading} = this.state
 
     return (
       <View style={styles.container}>
-        <Loader loading={this.state.loading} text={'Submitting'}/>
+        <Loader loading={loading} text={loadingText}/>
         <ScrollView content={{paddingBottom: 80}}>
           <TextInput ref={ref => this.refVehicleType = ref}
                      style={styles.input}

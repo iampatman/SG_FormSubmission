@@ -6,6 +6,10 @@ export const extractMovingData = (data) => {
         title: 'Basic Information',
         data: [
           {
+            key: 'Form No',
+            value: data.basic_information.form_no,
+          },
+          {
             key: 'Submission Date',
             value: data.basic_information.submit_date,
           },
@@ -86,6 +90,10 @@ export const extractRentalData = (data) => {
         title: 'Basic Information',
         data: [
           {
+            key: 'Form No',
+            value: data.basic_information.form_no,
+          },
+          {
             key: 'Submission Date',
             value: data.basic_information.submitted_date,
           },
@@ -154,6 +162,10 @@ export const extractRenovationData = (data) => {
       {
         title: 'Basic Information',
         data: [
+          {
+            key: 'Form No',
+            value: data.basic_information.form_no,
+          },
           {
             key: 'Submission Date',
             value: data.basic_information.submit_date,
@@ -239,6 +251,10 @@ export const extractVehicleData = (data) => {
         title: 'Basic Information',
         data: [
           {
+            key: 'Form No',
+            value: data.basic_information.form_no,
+          },
+          {
             key: 'Submission Date',
             value: data.basic_information.submit_date,
           },
@@ -317,6 +333,10 @@ export const extractRefundData = (data) => {
       {
         title: 'Basic Information',
         data: [
+          {
+            key: 'Form No',
+            value: data.basic_information.form_no,
+          },
           {
             key: 'Submission Date',
             value: data.basic_information.submit_date,

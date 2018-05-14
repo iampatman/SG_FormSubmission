@@ -31,6 +31,7 @@ export default class RefundFormScreen extends React.Component {
 
     this.state = {
       loading: true,
+      loadingText: 'Loading',
       typeData: []
     }
   }
@@ -43,6 +44,7 @@ export default class RefundFormScreen extends React.Component {
     loadData(DATA_TYPE.REFUND).then((data) => {
       console.log('tdata ' + JSON.stringify(data))
       this.data.email = data.email
+      this.data.unit_no = data.unit_no
       this.setState({
         typeData: data.tdata,
         loading: false
@@ -50,27 +52,23 @@ export default class RefundFormScreen extends React.Component {
     }).catch()
   }
 
-  // loadData = () => {
-  //   loadData(DATA_TYPE.REFUND).then((tdata) => {
-  //     console.log('tdata ' + JSON.stringify(tdata))
-  //     this.setState({
-  //       typeData: tdata,
-  //       loading: false
-  //     })
-  //   }).catch()
-  // }
+  setLoading = (loading, loadingText) => {
+    this.setState({
+      loading, loadingText
+    })
+  }
 
   submitFormData = (data) => {
     const {navigation} = this.props
     console.log('Data submitForm' + data)
-    this.setState({loading: true})
+    this.setLoading(true, 'Submitting')
     submitForm(data).then((result) => {
-      this.setState({loading: false})
+      this.setLoading(false)
       navigateToThankyou(navigation)
     }).catch((errorMsg) => {
       Alert.alert('Error', errorMsg, [{
         text: 'OK', onPress: () => {
-          this.setState({loading: false})
+          this.setLoading(false)
         }
       }], {cancelable: false})
     })
@@ -90,11 +88,11 @@ export default class RefundFormScreen extends React.Component {
   }
 
   render () {
-    const {typeData} = this.state
+    const {typeData, loading, loadingText} = this.state
 
     return (
       <View style={styles.container}>
-        <Loader loading={this.state.loading} text={'Submitting'}/>
+        <Loader loading={loading} text={loadingText}/>
         <ScrollView content={{paddingBottom: 80}}>
           <TextInput ref={ref => this.refVehicleType = ref}
                      style={styles.input}

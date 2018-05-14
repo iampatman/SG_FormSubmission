@@ -1,5 +1,5 @@
 export default {
-  token: 'Token 9e0e39faab5a4554469dbe50c2ae9f8999345480',
+  token: 'Token be3c793f6629023e8dba89196b05fedda1a8ff83',
   url: 'http://13.250.247.107/v1/form',
   userDetails: {
     email: 'nguyentrung0904@gmail.com',

@@ -43,6 +43,7 @@ export default class MovingFormScreen extends React.Component {
       showingCalendarPicker: false,
       showingMovingContractor: false,
       loading: true,
+      loadingText: 'Loading',
       movingSituationData: [],
       selectedType: 1
     }
@@ -52,6 +53,7 @@ export default class MovingFormScreen extends React.Component {
     loadData(DATA_TYPE.MOVING).then((data) => {
       console.log('tdata ' + JSON.stringify(data))
       this.data.email = data.email
+      this.data.unit_no = data.unit_no
       this.setState({
         movingSituationData: data.tdata,
         email: data.email,
@@ -65,17 +67,23 @@ export default class MovingFormScreen extends React.Component {
     this.loadData()
   }
 
+  setLoading = (loading, loadingText) => {
+    this.setState({
+      loading, loadingText
+    })
+  }
+
   submitFormData = (data) => {
     const {navigation} = this.props
     console.log('Data submitForm' + data)
-    this.setState({loading: true})
+    this.setLoading(true, 'Submitting')
     submitForm(data).then((result) => {
-      this.setState({loading: false})
+      this.setLoading(false)
       navigateToThankyou(navigation)
     }).catch((errorMsg) => {
       Alert.alert('Error', errorMsg, [{
         text: 'OK', onPress: () => {
-          this.setState({loading: false})
+          this.setLoading(false)
         }
       }], {cancelable: false})
     })
@@ -151,11 +159,11 @@ export default class MovingFormScreen extends React.Component {
   }
 
   render () {
-    const {movingSituationData, email, unit_no,selectedType} = this.state
+    const {movingSituationData, email, unit_no, selectedType, loading, loadingText} = this.state
 
     return (
       <View style={styles.container}>
-        <Loader loading={this.state.loading} text={'Submitting'}/>
+        <Loader loading={loading} text={loadingText}/>
         <ScrollView contentContainerStyle={{paddingBottom: 80}}>
           <TextInput ref={ref => this.refMovingSituation = ref}
                      style={styles.input}
@@ -164,9 +172,10 @@ export default class MovingFormScreen extends React.Component {
                        pickerData: movingSituationData.map((item) => item.name),
                        onPickerConfirm: this.onMovingSituationSelected
                      })}/>
-          {selectedType === 3 ? <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20}}>
-            <Button type={'ghost'} onClick={this.uploadFile}>Upload file 47</Button>
-            <Button type={'ghost'} onClick={this.uploadFile}>Upload file 65</Button>
+          {selectedType === 3 ?
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20}}>
+              <Button type={'ghost'} onClick={this.uploadFile}>Upload file 47</Button>
+              <Button type={'ghost'} onClick={this.uploadFile}>Upload file 65</Button>
             </View> : null}
 
           <TouchableOpacity style={styles.datePickerView}
@@ -179,7 +188,7 @@ export default class MovingFormScreen extends React.Component {
           <TextInput style={styles.input} placeholder={'Email address'} value={email}
                      onChangeText={this.onEmailChange}/>
           {/*<TextInput style={styles.input} placeholder={'Description'}*/}
-                     {/*onChangeText={(text) => this.data.description = text}/>*/}
+          {/*onChangeText={(text) => this.data.description = text}/>*/}
           <View style={{flexDirection: 'row'}}>
             <Text>Engaging Contractor/Mover</Text>
             <Checkbox onChange={(selected) => {

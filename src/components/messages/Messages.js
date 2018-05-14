@@ -77,6 +77,13 @@ export default class Messages extends React.Component {
     console.log('messages data' + JSON.stringify(data))
     return (
       <View style={styles.container}>
+        <FlatList
+          data={data}
+          renderItem={this.renderItem}
+          keyExtractor={(item) => item.id.toString()}
+          refreshing={refreshing}
+          onRefresh={() => {}}
+        />
         <View style={styles.sendMsgContainer}>
           <TextInput style={styles.messageInput}
                      placeholder={'Type your message here'}
@@ -87,13 +94,6 @@ export default class Messages extends React.Component {
                   style={styles.submitBtn}
                   onClick={this.onSendMessagePressed}>Send</Button>
         </View>
-        <FlatList
-          data={data}
-          renderItem={this.renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          refreshing={refreshing}
-          onRefresh={() => {}}
-        />
       </View>
     )
   }
