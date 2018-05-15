@@ -101,6 +101,8 @@ export default class RefundFormScreen extends React.Component {
                        pickerData: typeData.map((item) => item.name),
                        onPickerConfirm: this.onTenantTypeSelected
                      })}/>
+          <TextInput style={styles.input} placeholder={'Unit'} value={this.data.unit_no} editable={false}/>
+          <TextInput style={styles.input} placeholder={'Email address'} value={this.data.email} editable={false}/>
           <TextInput style={styles.input} placeholder={'Amount'}
                      onChangeText={(text) => {this.data.amount = text}}/>
           <TextInput style={styles.input} placeholder={'Account Name'}

@@ -161,7 +161,8 @@ export default class RenovationFormScreen extends React.Component {
                        pickerData: typeData.map((item) => item.name),
                        onPickerConfirm: this.onTenantTypeSelected
                      })}/>
-
+          <TextInput style={styles.input} placeholder={'Unit'} value={this.data.unit_no} editable={false}/>
+          <TextInput style={styles.input} placeholder={'Email address'} value={this.data.email} editable={false}/>
           <TouchableOpacity style={styles.datePickerView}
                             onPress={() => this.setState({showingCalendarPicker: true, commenceDateSelected: true})}>
             <Text ref={ref => this.refTenancyFrom = ref}>

@@ -147,7 +147,8 @@ export default class VehicleFormScreen extends React.Component {
                      })}/>
           <TextInput style={styles.input} placeholder={'Vehcle Number'}
                      onChangeText={(text) => {this.data.vehicle_no = text}}/>
-
+          <TextInput style={styles.input} placeholder={'Unit'} value={this.data.unit_no} editable={false}/>
+          <TextInput style={styles.input} placeholder={'Email address'} value={this.data.email} editable={false}/>
           <TouchableOpacity style={styles.datePickerView}
                             onPress={() => this.setState({showingCalendarPicker: true, commenceDateSelected: true})}>
             <Text ref={ref => this.refTenancyFrom = ref}>

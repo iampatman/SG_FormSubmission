@@ -38,7 +38,9 @@ export default StyleSheet.create({
   messageInput: {
     alignSelf: 'stretch',
     height: 70,
-    backgroundColor: 'gray',
+    borderWidth: 1,
+    borderColor: 'gray',
+    // backgroundColor: 'gray',
     padding: 10,
     marginVertical: 10
   }
