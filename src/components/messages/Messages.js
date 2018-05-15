@@ -77,13 +77,14 @@ export default class Messages extends React.Component {
     console.log('messages data' + JSON.stringify(data))
     return (
       <View style={styles.container}>
+        {data.length > 0 ?
         <FlatList
           data={data}
           renderItem={this.renderItem}
           keyExtractor={(item) => item.id.toString()}
           refreshing={refreshing}
           onRefresh={() => {}}
-        />
+        /> : <Text>No Messages</Text>}
         <View style={styles.sendMsgContainer}>
           <TextInput style={styles.messageInput}
                      placeholder={'Type your message here'}

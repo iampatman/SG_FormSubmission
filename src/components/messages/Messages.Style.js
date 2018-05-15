@@ -4,6 +4,7 @@ import {
 
 export default StyleSheet.create({
   container: {
+    height: 300,
     backgroundColor: 'white',
   },
   sectionText: {
