@@ -14,7 +14,6 @@ export default StyleSheet.create({
   itemContainer: {
     marginVertical: 5,
     flexDirection: 'row',
-    // justifyContent: 'center',
     alignItems: 'center'
   },
   itemTitleContainer: {
@@ -33,7 +32,9 @@ export default StyleSheet.create({
   sendMsgContainer: {
     alignItems: 'flex-end'
   },
-  submitBtn: {width: 100, height: 40},
+  submitBtn: {
+    width: 100, height: 40
+  },
 
   messageInput: {
     alignSelf: 'stretch',

@@ -1,4 +1,5 @@
 import n from './RouteNames'
+import CONFIG from '../utils/Config'
 import { StackNavigator } from 'react-navigation'
 import FormMenuScreen from '../containers/forms-menu/FormMenu.Screen'
 import MovingFormScreen from '../containers/moving-form/MovingForm.Screen'
@@ -21,5 +22,5 @@ export default StackNavigator({
   [n.SUBMISSION_HISTORY]: {screen: SubmissionHistoryScreen},
   [n.FORM_DETAIL]: {screen: FormDetailScreen},
 }, {
-  initialRouteName: n.FORM_MENU
+  initialRouteName: CONFIG.formid == 0 ? n.FORM_MENU : n.FORM_DETAIL
 })
