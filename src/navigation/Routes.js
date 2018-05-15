@@ -22,5 +22,5 @@ export default StackNavigator({
   [n.SUBMISSION_HISTORY]: {screen: SubmissionHistoryScreen},
   [n.FORM_DETAIL]: {screen: FormDetailScreen},
 }, {
-  initialRouteName: CONFIG.formid == 0 ? n.FORM_MENU : n.FORM_DETAIL
+  initialRouteName: CONFIG.formid == 0 && CONFIG.formtype == 0  ? n.FORM_MENU : n.FORM_DETAIL
 })

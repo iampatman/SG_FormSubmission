@@ -1,9 +1,22 @@
 import React from 'react'
-import { View, TextInput, Dimensions, Modal, Alert, Text, ScrollView, TouchableOpacity } from 'react-native'
+import {
+  View,
+  ActionSheetIOS,
+  TextInput,
+  Dimensions,
+  Modal,
+  Alert,
+  Text,
+  ScrollView,
+  TouchableOpacity, Image
+} from 'react-native'
+
+import { ActionSheet } from 'antd-mobile'
 import styles from './RentalForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
+import ImagePicker from 'react-native-image-picker'
 import { Button } from 'antd-mobile'
 import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
 import { submitForm, DATA_TYPE, loadData } from '../../api/index'
@@ -11,6 +24,7 @@ import Loader from '../../components/loader/Loader'
 import moment from 'moment'
 import CONFIG from '../../utils/Config'
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
+import Images from '../../assets/Images'
 
 export default class RentalFormScreen extends React.Component {
   static navigationOptions = {
@@ -36,7 +50,10 @@ export default class RentalFormScreen extends React.Component {
       loading: true,
       loadingText: 'Loading',
       commenceDateSelected: false,
-      typeData: []
+      typeData: [],
+      uploadedPhoto: Images.picture_frame_icon,
+      selectedFileData: '',
+      selectedFileName: '',
     }
   }
 
@@ -84,6 +101,8 @@ export default class RentalFormScreen extends React.Component {
   }
 
   onSubmitPressed = () => {
+    this.data.file_upload.push({name: this.state.selectedFileName, bdata: this.state.selectedFileData})
+
     console.log('Data onSubmitPressed' + JSON.stringify(this.data))
     this.submitFormData(this.data)
   }
@@ -103,19 +122,54 @@ export default class RentalFormScreen extends React.Component {
       showingCalendarPicker: false,
     })
   }
-  uploadFile = (fileId) => {
-    DocumentPicker.show({
-      filetype: [DocumentPickerUtil.allFiles()],
-    }, (error, res) => {
-      // Android
-      console.log(
-        res.uri,
-        res.type, // mime type
-        res.fileName,
-        res.fileSize
-      )
+
+  uploadFile = () => {
+    const options = ['Document', 'Camera Roll', 'Take Photo', 'Cancel']
+    ActionSheet.showActionSheetWithOptions({
+      options, cancelButtonIndex: 3, title: 'Upload'
+    }, (selectedId) => {
+      console.log('uploadFile ' + selectedId)
+      const options = {
+        storageOptions: {
+          skipBackup: true,
+          path: 'images'
+        }
+      }
+      switch (selectedId) {
+        case 0:
+          DocumentPicker.show({
+            filetype: [DocumentPickerUtil.allFiles()],
+          }, (error, response) => {
+            console.log('DocumentPicker: ' + JSON.stringify(response))
+            if (error != null) {
+              uploadedPhoto: Images.document_icon
+            }
+          })
+          break
+        case 1:
+          ImagePicker.launchImageLibrary(options, (response) => {
+            console.log('launchImageLibrary: ' + JSON.stringify(response))
+            this.setState({
+              uploadedPhoto: {uri: response.uri},
+              selectedFileData: response.data,
+              selectedFileName: 'image'
+            })
+          })
+          break
+        case 2:
+          ImagePicker.launchCamera(options, (response) => {
+            console.log('launchCamera: ' + JSON.stringify(response))
+            this.setState({
+              uploadedPhoto: {uri: response.uri},
+              selectedFileData: response.data,
+              selectedFileName: 'image'
+            })
+          })
+          break
+      }
     })
   }
+
   onTenantTypeSelected = (text) => {
     console.log('onPickerConfirm' + text[0])
     const {typeData} = this.state
@@ -125,7 +179,7 @@ export default class RentalFormScreen extends React.Component {
   }
 
   render () {
-    const {typeData, loading, loadingText} = this.state
+    const {typeData, loading, loadingText, uploadedPhoto} = this.state
 
     return (
       <View style={styles.container}>
@@ -158,6 +212,7 @@ export default class RentalFormScreen extends React.Component {
           <View
             style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginVertical: 10}}>
             <Button type={'ghost'} onClick={this.uploadFile}>Attach Agreement</Button>
+            <Image source={uploadedPhoto} style={{height: 50, width: 50}}/>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Checkbox onChange={(selected) => {
