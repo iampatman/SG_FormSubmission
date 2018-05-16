@@ -15,6 +15,7 @@ import { ActionSheet } from 'antd-mobile'
 import styles from './RentalForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
+import showUploadFileActionSheet, { SELECTED_TYPE } from '../../components/uploader/Uploader'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
 import ImagePicker from 'react-native-image-picker'
 import { Button } from 'antd-mobile'
@@ -25,6 +26,7 @@ import moment from 'moment'
 import CONFIG from '../../utils/Config'
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
 import Images from '../../assets/Images'
+import RNFetchBlob from 'react-native-fetch-blob'
 
 export default class RentalFormScreen extends React.Component {
   static navigationOptions = {
@@ -101,8 +103,6 @@ export default class RentalFormScreen extends React.Component {
   }
 
   onSubmitPressed = () => {
-    this.data.file_upload.push({name: this.state.selectedFileName, bdata: this.state.selectedFileData})
-
     console.log('Data onSubmitPressed' + JSON.stringify(this.data))
     this.submitFormData(this.data)
   }
@@ -124,49 +124,29 @@ export default class RentalFormScreen extends React.Component {
   }
 
   uploadFile = () => {
-    const options = ['Document', 'Camera Roll', 'Take Photo', 'Cancel']
-    ActionSheet.showActionSheetWithOptions({
-      options, cancelButtonIndex: 3, title: 'Upload'
-    }, (selectedId) => {
-      console.log('uploadFile ' + selectedId)
-      const options = {
-        storageOptions: {
-          skipBackup: true,
-          path: 'images'
-        }
-      }
-      switch (selectedId) {
-        case 0:
-          DocumentPicker.show({
-            filetype: [DocumentPickerUtil.allFiles()],
-          }, (error, response) => {
-            console.log('DocumentPicker: ' + JSON.stringify(response))
-            if (error != null) {
-              uploadedPhoto: Images.document_icon
-            }
-          })
-          break
-        case 1:
-          ImagePicker.launchImageLibrary(options, (response) => {
-            console.log('launchImageLibrary: ' + JSON.stringify(response))
-            this.setState({
-              uploadedPhoto: {uri: response.uri},
-              selectedFileData: response.data,
-              selectedFileName: 'image'
+    this.data.file_upload = []
+    const onComplete = (fileType, response) => {
+      switch (fileType) {
+        case SELECTED_TYPE.DOCUMENT:
+          RNFetchBlob.fs.readFile(response.uri, 'base64')
+            .then((files) => {
+              console.log(`fileName ${response.fileName} bdata length ${files.length}`)
+              this.data.file_upload.push({name: response.fileName, bdata: files})
             })
-          })
+          if (response != null) {
+            uploadedPhoto: Images.document_icon
+          }
           break
-        case 2:
-          ImagePicker.launchCamera(options, (response) => {
-            console.log('launchCamera: ' + JSON.stringify(response))
-            this.setState({
-              uploadedPhoto: {uri: response.uri},
-              selectedFileData: response.data,
-              selectedFileName: 'image'
-            })
+        case SELECTED_TYPE.IMAGE:
+          this.data.file_upload.push({name: this.state.selectedFileName, bdata: this.state.selectedFileData})
+          this.setState({
+            uploadedPhoto: {uri: response.uri},
           })
           break
       }
+    }
+    showUploadFileActionSheet({
+      onComplete
     })
   }
 

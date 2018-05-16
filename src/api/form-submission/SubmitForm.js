@@ -3,7 +3,7 @@ import CONFIG from '../../utils/Config'
 export default query = async (data) => {
   return new Promise((resolve, reject) => {
     let url = CONFIG.url + '/submit'
-    console.log('Send moving form: ' + JSON.stringify({data}))
+    console.log('Submitting form: ' + JSON.stringify({data}))
     fetch(url, {
       method: 'POST',
       headers: {
