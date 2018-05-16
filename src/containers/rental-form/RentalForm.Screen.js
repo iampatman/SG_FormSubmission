@@ -54,8 +54,7 @@ export default class RentalFormScreen extends React.Component {
       commenceDateSelected: false,
       typeData: [],
       uploadedPhoto: Images.picture_frame_icon,
-      selectedFileData: '',
-      selectedFileName: '',
+      selectedDocumentFileName: ''
     }
   }
 
@@ -102,7 +101,20 @@ export default class RentalFormScreen extends React.Component {
     })
   }
 
+  validateForm = () => {
+    const {type, tenancy_start_date, tenancy_end_date} = this.data
+    if (type == '' || tenancy_end_date == '' || tenancy_start_date == '') {
+      Alert.alert('Notice', 'Please fill all the fields')
+      return false
+    } else {
+      return true
+    }
+  }
+
   onSubmitPressed = () => {
+    if (this.validateForm() == false) {
+      return
+    }
     console.log('Data onSubmitPressed' + JSON.stringify(this.data))
     this.submitFormData(this.data)
   }
@@ -129,16 +141,19 @@ export default class RentalFormScreen extends React.Component {
       switch (fileType) {
         case SELECTED_TYPE.DOCUMENT:
           RNFetchBlob.fs.readFile(response.uri, 'base64')
-            .then((files) => {
-              console.log(`fileName ${response.fileName} bdata length ${files.length}`)
-              this.data.file_upload.push({name: response.fileName, bdata: files})
+            .then((data) => {
+              console.log(`fileName ${response.fileName} bdata length ${data.length}`)
+              this.data.file_upload.push({name: response.fileName, bdata: data})
             })
           if (response != null) {
             uploadedPhoto: Images.document_icon
           }
+          this.setState({
+            selectedDocumentFileName: response.fileName
+          })
           break
         case SELECTED_TYPE.IMAGE:
-          this.data.file_upload.push({name: this.state.selectedFileName, bdata: this.state.selectedFileData})
+          this.data.file_upload.push({name: response.fileName, bdata: response.data})
           this.setState({
             uploadedPhoto: {uri: response.uri},
           })
@@ -159,7 +174,7 @@ export default class RentalFormScreen extends React.Component {
   }
 
   render () {
-    const {typeData, loading, loadingText, uploadedPhoto} = this.state
+    const {typeData, loading, loadingText, uploadedPhoto, selectedDocumentFileName} = this.state
 
     return (
       <View style={styles.container}>
@@ -193,6 +208,7 @@ export default class RentalFormScreen extends React.Component {
             style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginVertical: 10}}>
             <Button type={'ghost'} onClick={this.uploadFile}>Attach Agreement</Button>
             <Image source={uploadedPhoto} style={{height: 50, width: 50}}/>
+            <Text>{selectedDocumentFileName}</Text>
           </View>
           <View style={{flexDirection: 'row'}}>
             <Checkbox onChange={(selected) => {

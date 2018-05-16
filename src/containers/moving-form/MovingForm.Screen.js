@@ -151,6 +151,10 @@ export default class MovingFormScreen extends React.Component {
     })
   }
 
+  formValidate = () => {
+
+  }
+
   onEmailChange = (text) => {
     this.data.email = text
     this.setState({
@@ -174,8 +178,8 @@ export default class MovingFormScreen extends React.Component {
                      })}/>
           {selectedType === 3 ?
             <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20}}>
-              <Button type={'ghost'} onClick={this.uploadFile}>Upload file 47</Button>
-              <Button type={'ghost'} onClick={this.uploadFile}>Upload file 65</Button>
+              <Button type={'ghost'} onClick={this.uploadFile}>Sec 47</Button>
+              <Button type={'ghost'} onClick={this.uploadFile}>Sec 65</Button>
             </View> : null}
 
           <TouchableOpacity style={styles.datePickerView}
