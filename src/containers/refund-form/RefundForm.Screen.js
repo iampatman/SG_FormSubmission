@@ -35,9 +35,7 @@ export default class RefundFormScreen extends React.Component {
     this.state = {
       loading: true,
       loadingText: 'Loading',
-      typeData: [],
-      uploadedPhoto: Images.picture_frame_icon,
-      selectedDocumentFileName: ''
+      typeData: []
     }
   }
 
@@ -78,6 +76,7 @@ export default class RefundFormScreen extends React.Component {
       }], {cancelable: false})
     })
   }
+
   validateForm = () => {
     const {type, account_no, account_name, amount} = this.data
     if (type == '' || account_no == '' || account_name == '' || amount == '') {
@@ -93,35 +92,6 @@ export default class RefundFormScreen extends React.Component {
     }
     console.log('Data onSubmitPressed' + JSON.stringify(this.data))
     this.submitFormData(this.data)
-  }
-  uploadFile = () => {
-    this.data.file_upload = []
-    const onComplete = (fileType, response) => {
-      switch (fileType) {
-        case SELECTED_TYPE.DOCUMENT:
-          RNFetchBlob.fs.readFile(response.uri, 'base64')
-            .then((data) => {
-              console.log(`fileName ${response.fileName} bdata length ${data.length}`)
-              this.data.file_upload.push({name: response.fileName, bdata: data})
-            })
-          if (response != null) {
-            this.setState({
-              selectedDocumentFileName: response.fileName,
-              uploadedPhoto: Images.document_icon
-            })
-          }
-          break
-        case SELECTED_TYPE.IMAGE:
-          this.data.file_upload.push({name: response.fileName, bdata: response.data})
-          this.setState({
-            uploadedPhoto: {uri: response.uri},
-          })
-          break
-      }
-    }
-    showUploadFileActionSheet({
-      onComplete
-    })
   }
 
   onTenantTypeSelected = (text) => {
@@ -157,12 +127,6 @@ export default class RefundFormScreen extends React.Component {
                      onChangeText={(text) => {this.data.account_name = text}}/>
           <TextInput style={styles.input} placeholder={'Account Number'}
                      onChangeText={(text) => {this.data.account_no = text}}/>
-          <View
-            style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginVertical: 10}}>
-            <Button type={'ghost'} onClick={this.uploadFile}>Attach Agreement</Button>
-            <Image source={uploadedPhoto} style={{height: 50, width: 50}}/>
-            <Text>{selectedDocumentFileName}</Text>
-          </View>
 
         </ScrollView>
         <Button

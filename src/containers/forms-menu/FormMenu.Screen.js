@@ -1,15 +1,36 @@
 import React from 'react'
-import { View, Text, FlatList, Image, TouchableOpacity } from 'react-native'
+import {
+  View, Text, FlatList, Image,
+  TouchableOpacity, NativeModules, Platform, Button
+} from 'react-native'
 import styles from './FormMenu.Style'
 import listData from './FormMenu.Form'
 import {
   navigateToHistory, navigateToMovingForm, navigateToRefundForm, navigateToRenovationForm,
   navigateToRentalForm, navigateToVehicleForm
 } from '../../navigation/helpers/Nav.FormMenu.Helper'
+import CONFIG from '../../utils/Config'
+
+const {ReactManager} = NativeModules
 
 export default class FormMenuScreen extends React.Component {
   static navigationOptions = {
-    title: 'Form Submission'
+    title: 'Form Submission',
+    headerLeft: <Button title={'Back'} onPress={() => {
+      FormMenuScreen.goBackStaticFunc()
+    }}></Button>
+  }
+
+  static goBackStaticFunc = () => {
+    if (CONFIG.rootTag != -1) {
+      console.log('goBackToLifeUp app rootTag ' + CONFIG.rootTag)
+      if (Platform.OS === 'ios') {
+        ReactManager.dismissPresentedViewController(CONFIG.rootTag)
+      } else {
+        NativeModules.QRActivityStarter.goback_LifeUp()
+      }
+
+    }
   }
 
   onMenuSelected = (id) => {
