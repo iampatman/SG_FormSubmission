@@ -385,3 +385,22 @@ export const extractRefundData = (data) => {
     ]
   return result
 }
+
+export const extractOtherInformation = ({other_information}) => {
+
+
+  var data = []
+  other_information.forEach((fileInfo) => {
+    data.push({
+      key: 'Attached File',
+      value: fileInfo.name
+    })
+  })
+
+  const result = {
+    title: 'Other Information',
+    data
+  }
+  return result
+
+}
