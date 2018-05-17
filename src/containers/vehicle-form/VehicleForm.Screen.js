@@ -113,11 +113,11 @@ export default class VehicleFormScreen extends React.Component {
               this.data.file_upload.push({name: response.fileName, bdata: data})
             })
           if (response != null) {
-            uploadedPhoto: Images.document_icon
+            this.setState({
+              selectedDocumentFileName: response.fileName,
+              uploadedPhoto: Images.document_icon
+            })
           }
-          this.setState({
-            selectedDocumentFileName: response.fileName
-          })
           break
         case SELECTED_TYPE.IMAGE:
           this.data.file_upload.push({name: response.fileName, bdata: response.data})
