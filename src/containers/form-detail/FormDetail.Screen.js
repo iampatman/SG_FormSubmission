@@ -73,7 +73,8 @@ export default class FormDetailScreen extends React.Component {
       }
 
       const extractedOtherData = extractOtherInformation(data)
-      extractedData.push(extractedOtherData)
+      if (extractedOtherData)
+        extractedData.push(extractedOtherData)
 
       this.setState({
         message: data.message,

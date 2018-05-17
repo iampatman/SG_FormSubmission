@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TextInput, Dimensions, Modal, Alert, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, TextInput, Dimensions, Modal, Alert, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
 import styles from './RefundForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
@@ -11,6 +11,9 @@ import Loader from '../../components/loader/Loader'
 import moment from 'moment'
 import CONFIG from '../../utils/Config'
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
+import RNFetchBlob from 'react-native-fetch-blob'
+import Images from '../../assets/Images'
+import showUploadFileActionSheet, { SELECTED_TYPE } from '../../components/uploader/Uploader'
 
 export default class RefundFormScreen extends React.Component {
   static navigationOptions = {
@@ -32,7 +35,9 @@ export default class RefundFormScreen extends React.Component {
     this.state = {
       loading: true,
       loadingText: 'Loading',
-      typeData: []
+      typeData: [],
+      uploadedPhoto: Images.picture_frame_icon,
+      selectedDocumentFileName: ''
     }
   }
 
@@ -73,10 +78,50 @@ export default class RefundFormScreen extends React.Component {
       }], {cancelable: false})
     })
   }
-
+  validateForm = () => {
+    const {type, account_no, account_name, amount} = this.data
+    if (type == '' || account_no == '' || account_name == '' || amount == '') {
+      Alert.alert('Notice', 'Please fill all the fields')
+      return false
+    } else {
+      return true
+    }
+  }
   onSubmitPressed = () => {
+    if (this.validateForm() == false) {
+      return
+    }
     console.log('Data onSubmitPressed' + JSON.stringify(this.data))
     this.submitFormData(this.data)
+  }
+  uploadFile = () => {
+    this.data.file_upload = []
+    const onComplete = (fileType, response) => {
+      switch (fileType) {
+        case SELECTED_TYPE.DOCUMENT:
+          RNFetchBlob.fs.readFile(response.uri, 'base64')
+            .then((data) => {
+              console.log(`fileName ${response.fileName} bdata length ${data.length}`)
+              this.data.file_upload.push({name: response.fileName, bdata: data})
+            })
+          if (response != null) {
+            uploadedPhoto: Images.document_icon
+          }
+          this.setState({
+            selectedDocumentFileName: response.fileName
+          })
+          break
+        case SELECTED_TYPE.IMAGE:
+          this.data.file_upload.push({name: response.fileName, bdata: response.data})
+          this.setState({
+            uploadedPhoto: {uri: response.uri},
+          })
+          break
+      }
+    }
+    showUploadFileActionSheet({
+      onComplete
+    })
   }
 
   onTenantTypeSelected = (text) => {
@@ -88,7 +133,10 @@ export default class RefundFormScreen extends React.Component {
   }
 
   render () {
-    const {typeData, loading, loadingText} = this.state
+    const {
+      typeData, loading, loadingText,
+      uploadedPhoto, selectedDocumentFileName
+    } = this.state
 
     return (
       <View style={styles.container}>
@@ -112,6 +160,8 @@ export default class RefundFormScreen extends React.Component {
           <View
             style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginVertical: 10}}>
             <Button type={'ghost'} onClick={this.uploadFile}>Attach Agreement</Button>
+            <Image source={uploadedPhoto} style={{height: 50, width: 50}}/>
+            <Text>{selectedDocumentFileName}</Text>
           </View>
 
         </ScrollView>

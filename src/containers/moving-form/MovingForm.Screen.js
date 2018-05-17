@@ -1,16 +1,22 @@
 import React from 'react'
-import { View, TextInput, Dimensions, Modal, Text, ScrollView, Alert, TouchableOpacity } from 'react-native'
+import { View, TextInput, Dimensions, Modal, Text, ScrollView, Alert, TouchableOpacity, Image } from 'react-native'
 import styles from './MovingForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
 import { Button } from 'antd-mobile'
 import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
 import Loader from '../../components/loader/Loader'
 import { submitForm, DATA_TYPE, loadData } from '../../api/index'
 import moment from 'moment'
-import CONFIG from '../../utils/Config'
+import Images from '../../assets/Images'
+import RNFetchBlob from 'react-native-fetch-blob'
+import showUploadFileActionSheet, { SELECTED_TYPE } from '../../components/uploader/Uploader'
+
+const SELECTED_SEC_DOCUMENT = {
+  SEC_47: 1,
+  SEC_65: 2
+}
 
 export default class MovingFormScreen extends React.Component {
   static navigationOptions = {
@@ -37,6 +43,9 @@ export default class MovingFormScreen extends React.Component {
       file_upload: []
     }
 
+    this.file47 = null
+    this.file65 = null
+
     this.state = {
       unit_no: '',
       email: '',
@@ -45,7 +54,11 @@ export default class MovingFormScreen extends React.Component {
       loading: true,
       loadingText: 'Loading',
       movingSituationData: [],
-      selectedType: 1
+      selectedType: 1,
+      uploadedPhoto47: Images.picture_frame_icon,
+      selectedDocumentFileName47: '',
+      uploadedPhoto65: Images.picture_frame_icon,
+      selectedDocumentFileName65: ''
     }
   }
 
@@ -89,7 +102,23 @@ export default class MovingFormScreen extends React.Component {
     })
   }
 
+  validateForm = () => {
+    const {type, moving_date} = this.data
+    if (type == '' || moving_date == '') {
+      Alert.alert('Notice', 'Please fill all the fields')
+      return false
+    } else {
+      return true
+    }
+  }
+
   onSubmitPressed = () => {
+    if (this.validateForm() == false) {
+      return
+    }
+    if (this.file47) this.data.file_upload.push(this.file47)
+    if (this.file65) this.data.file_upload.push(this.file65)
+
     console.log('Data onSubmitPressed' + JSON.stringify(this.data))
     this.submitFormData(this.data)
   }
@@ -137,22 +166,55 @@ export default class MovingFormScreen extends React.Component {
     this.refMovingSituation.setNativeProps({text: text[0]})
   }
 
-  uploadFile = (fileId) => {
-    DocumentPicker.show({
-      filetype: [DocumentPickerUtil.allFiles()],
-    }, (error, res) => {
-      // Android
-      console.log(
-        res.uri,
-        res.type, // mime type
-        res.fileName,
-        res.fileSize
-      )
+  uploadFile = (docType: SELECTED_SEC_DOCUMENT) => {
+    this.data.file_upload = []
+    var params = null
+    var file = {}
+    const onComplete = (fileType, response) => {
+      switch (fileType) {
+        case SELECTED_TYPE.DOCUMENT:
+          RNFetchBlob.fs.readFile(response.uri, 'base64')
+            .then((data) => {
+              console.log(`fileName ${response.fileName} bdata length ${data.length}`)
+              file = {name: response.fileName, bdata: data}
+            })
+          if (response != null) {
+            params = {
+              uploadedPhoto: Images.document_icon,
+              selectedDocumentFileName: response.fileName
+            }
+          }
+          break
+        case SELECTED_TYPE.IMAGE:
+          file = {name: response.fileName, bdata: response.data}
+          params = {
+            uploadedPhoto: {uri: response.uri},
+          }
+          break
+      }
+      if (params != null) {
+        switch (docType) {
+          case SELECTED_SEC_DOCUMENT.SEC_47:
+            this.file47 = file
+            this.setState({
+              uploadedPhoto47: params.uploadedPhoto,
+              selectedDocumentFileName47: params.selectedDocumentFileName
+            })
+            break
+          case SELECTED_SEC_DOCUMENT.SEC_65:
+            this.file65 = file
+            this.setState({
+              uploadedPhoto65: params.uploadedPhoto,
+              selectedDocumentFileName65: params.selectedDocumentFileName
+            })
+            break
+        }
+      }
+
+    }
+    showUploadFileActionSheet({
+      onComplete
     })
-  }
-
-  formValidate = () => {
-
   }
 
   onEmailChange = (text) => {
@@ -163,7 +225,12 @@ export default class MovingFormScreen extends React.Component {
   }
 
   render () {
-    const {movingSituationData, email, unit_no, selectedType, loading, loadingText} = this.state
+    const {
+      movingSituationData, email, unit_no,
+      selectedType, loading, loadingText,
+      uploadedPhoto47, selectedDocumentFileName47,
+      uploadedPhoto65, selectedDocumentFileName65
+    } = this.state
 
     return (
       <View style={styles.container}>
@@ -177,9 +244,19 @@ export default class MovingFormScreen extends React.Component {
                        onPickerConfirm: this.onMovingSituationSelected
                      })}/>
           {selectedType === 3 ?
-            <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20}}>
-              <Button type={'ghost'} onClick={this.uploadFile}>Sec 47</Button>
-              <Button type={'ghost'} onClick={this.uploadFile}>Sec 65</Button>
+            <View style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 10}}>
+              <View style={{flex: 1, alignItems: 'center'}}>
+                <Button style={{width: 140}} type={'ghost'}
+                        onClick={() => this.uploadFile(SELECTED_SEC_DOCUMENT.SEC_47)}>Sec 47</Button>
+                <Image source={uploadedPhoto47} style={{height: 50, width: 50}}/>
+                <Text>{selectedDocumentFileName47}</Text>
+              </View>
+              <View style={{flex: 1, alignItems: 'center'}}>
+                <Button style={{width: 140}} type={'ghost'}
+                        onClick={() => this.uploadFile(SELECTED_SEC_DOCUMENT.SEC_65)}>Sec 65</Button>
+                <Image source={uploadedPhoto65} style={{height: 50, width: 50}}/>
+                <Text>{selectedDocumentFileName65}</Text>
+              </View>
             </View> : null}
 
           <TouchableOpacity style={styles.datePickerView}

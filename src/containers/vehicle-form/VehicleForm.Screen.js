@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, TextInput, Dimensions, Modal, Alert, Text, ScrollView, TouchableOpacity } from 'react-native'
+import { View, TextInput, Dimensions, Modal, Alert, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
 import styles from './VehicleForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
@@ -11,6 +11,9 @@ import Loader from '../../components/loader/Loader'
 import moment from 'moment'
 import CONFIG from '../../utils/Config'
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker'
+import RNFetchBlob from 'react-native-fetch-blob'
+import Images from '../../assets/Images'
+import showUploadFileActionSheet, { SELECTED_TYPE } from '../../components/uploader/Uploader'
 
 export default class VehicleFormScreen extends React.Component {
   static navigationOptions = {
@@ -26,7 +29,7 @@ export default class VehicleFormScreen extends React.Component {
       unit_no: '',
       usage_start_date: '',
       usage_end_date: '',
-      vehicle_no:'',
+      vehicle_no: '',
       file_upload: []
     }
 
@@ -37,14 +40,15 @@ export default class VehicleFormScreen extends React.Component {
       loading: true,
       loadingText: 'Loading',
       commenceDateSelected: false,
-      vehicleTypes: []
+      vehicleTypes: [],
+      uploadedPhoto: Images.picture_frame_icon,
+      selectedDocumentFileName: ''
     }
   }
 
   componentDidMount () {
     this.loadData()
   }
-
 
   loadData = () => {
     loadData(DATA_TYPE.VEHICLE).then((data) => {
@@ -58,15 +62,15 @@ export default class VehicleFormScreen extends React.Component {
     }).catch()
   }
 
-  // loadData = () => {
-  //   loadData(DATA_TYPE.VEHICLE).then((tdata) => {
-  //     console.log('tdata ' + JSON.stringify(tdata))
-  //     this.setState({
-  //       vehicleTypes: tdata,
-  //       loading: false
-  //     })
-  //   }).catch()
-  // }
+  validateForm = () => {
+    const {type, vehicle_no, usage_end_date, usage_start_date} = this.data
+    if (type == '' || vehicle_no == '' || usage_end_date == '' || usage_start_date == '') {
+      Alert.alert('Notice', 'Please fill all the fields')
+      return false
+    } else {
+      return true
+    }
+  }
 
   setLoading = (loading, loadingText) => {
     this.setState({
@@ -91,8 +95,41 @@ export default class VehicleFormScreen extends React.Component {
   }
 
   onSubmitPressed = () => {
+    if (this.validateForm() == false) {
+      return
+    }
     console.log('Data onSubmitPressed' + JSON.stringify(this.data))
     this.submitFormData(this.data)
+  }
+
+  uploadFile = () => {
+    this.data.file_upload = []
+    const onComplete = (fileType, response) => {
+      switch (fileType) {
+        case SELECTED_TYPE.DOCUMENT:
+          RNFetchBlob.fs.readFile(response.uri, 'base64')
+            .then((data) => {
+              console.log(`fileName ${response.fileName} bdata length ${data.length}`)
+              this.data.file_upload.push({name: response.fileName, bdata: data})
+            })
+          if (response != null) {
+            uploadedPhoto: Images.document_icon
+          }
+          this.setState({
+            selectedDocumentFileName: response.fileName
+          })
+          break
+        case SELECTED_TYPE.IMAGE:
+          this.data.file_upload.push({name: response.fileName, bdata: response.data})
+          this.setState({
+            uploadedPhoto: {uri: response.uri},
+          })
+          break
+      }
+    }
+    showUploadFileActionSheet({
+      onComplete
+    })
   }
 
   onCalendarChanged = (date: Date) => {
@@ -110,19 +147,7 @@ export default class VehicleFormScreen extends React.Component {
       showingCalendarPicker: false,
     })
   }
-  // uploadFile = (fileId) => {
-  //   DocumentPicker.show({
-  //     filetype: [DocumentPickerUtil.allFiles()],
-  //   }, (error, res) => {
-  //     // Android
-  //     console.log(
-  //       res.uri,
-  //       res.type, // mime type
-  //       res.fileName,
-  //       res.fileSize
-  //     )
-  //   })
-  // }
+
   onTenantTypeSelected = (text) => {
     console.log('onPickerConfirm' + text[0])
     const {vehicleTypes} = this.state
@@ -132,7 +157,10 @@ export default class VehicleFormScreen extends React.Component {
   }
 
   render () {
-    const {vehicleTypes, loadingText, loading} = this.state
+    const {
+      vehicleTypes, loadingText, loading,
+      uploadedPhoto, selectedDocumentFileName
+    } = this.state
 
     return (
       <View style={styles.container}>
@@ -168,6 +196,8 @@ export default class VehicleFormScreen extends React.Component {
           <View
             style={{flexDirection: 'row', justifyContent: 'space-between', paddingHorizontal: 20, marginVertical: 10}}>
             <Button type={'ghost'} onClick={this.uploadFile}>Attach Agreement</Button>
+            <Image source={uploadedPhoto} style={{height: 50, width: 50}}/>
+            <Text>{selectedDocumentFileName}</Text>
           </View>
           <CalendarPicker visible={this.state.showingCalendarPicker} title={'Select Date'}
                           onChange={this.onCalendarChanged}/>
