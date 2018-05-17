@@ -10,6 +10,7 @@ import FormDetailScreen from '../containers/form-detail/FormDetail.Screen'
 import RenovationFormScreen from '../containers/renovation-form/RenovationForm.Screen'
 import VehicleFormScreen from '../containers/vehicle-form/VehicleForm.Screen'
 import RefundFormScreen from '../containers/refund-form/RefundForm.Screen'
+import WebViewScreen from '../containers/web-view/WebView.Screen'
 
 export default StackNavigator({
   [n.FORM_MENU]: {screen: FormMenuScreen},
@@ -21,6 +22,7 @@ export default StackNavigator({
   [n.THANK_YOU]: {screen: ThankyouScreen},
   [n.SUBMISSION_HISTORY]: {screen: SubmissionHistoryScreen},
   [n.FORM_DETAIL]: {screen: FormDetailScreen},
+  [n.WEB_VIEW]: {screen: WebViewScreen},
 }, {
   initialRouteName: CONFIG.formid == 0 && CONFIG.formtype == 0  ? n.FORM_MENU : n.FORM_DETAIL
 })

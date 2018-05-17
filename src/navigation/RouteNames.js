@@ -8,4 +8,5 @@ export default {
   THANK_YOU: 'thank-you',
   SUBMISSION_HISTORY: 'submission-history',
   FORM_DETAIL: 'form-detail',
+  WEB_VIEW: 'web-view',
 }

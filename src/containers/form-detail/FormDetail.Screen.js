@@ -71,8 +71,10 @@ export default class FormDetailScreen extends React.Component {
           extractedData = extractRefundData(data)
           break
       }
+
       const extractedOtherData = extractOtherInformation(data)
       extractedData.push(extractedOtherData)
+
       this.setState({
         message: data.message,
         data: extractedData,
