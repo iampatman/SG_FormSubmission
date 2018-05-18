@@ -2,7 +2,7 @@ import React from 'react'
 import {
   View,
   Text,
-  FlatList, SectionList, ScrollView, Alert
+  FlatList, SectionList, ScrollView, Alert, NativeModules, Platform, Button
 } from 'react-native'
 import styles from './FormDetail.Style'
 import { loadFormDetail } from '../../api/index'
@@ -12,18 +12,55 @@ import {
 } from './FormDetail.ExtractData'
 import Loader from '../../components/loader/Loader'
 import Messages from '../../components/messages/Messages'
+import CONFIG from '../../utils/Config'
+
+const {ReactManager} = NativeModules
 
 export default class FormDetailScreen extends React.Component {
   constructor (props) {
     super(props)
-    const {params} = this.props.navigation.state
+    const {params} = this.props.navigation.state || {}
     console.log('FormDetailScreen Params ' + JSON.stringify(params))
+    this.formId = CONFIG.formid
+    this.formType = CONFIG.formtype
+    if (params != null) {
+      this.formId = params.formId
+      this.formType = params.formType
+    }
+
     this.state = {
-      formId: params.formId,
-      formType: params.formType,
+      formId: this.formId,
+      formType: this.formType,
       data: [],
       message: [],
       loading: true
+    }
+    console.log('State: ' + JSON.stringify(this.state))
+  }
+
+  static navigationOptions = ({navigation}) => {
+    if (CONFIG.formid != 0 && CONFIG.formtype != 0) {
+      return {
+        title: 'Form Detail',
+        headerLeft: <Button title={'Back'} onPress={() => {
+          FormDetailScreen.goBackStaticFunc()
+        }}></Button>
+      }
+    } else {
+      return null
+    }
+
+  }
+
+  static goBackStaticFunc = () => {
+    if (CONFIG.rootTag != -1) {
+      console.log('goBackToLifeUp app rootTag ' + CONFIG.rootTag)
+      if (Platform.OS === 'ios') {
+        ReactManager.dismissPresentedViewController(CONFIG.rootTag)
+      } else {
+        NativeModules.QRActivityStarter.goback_LifeUp()
+      }
+
     }
   }
 

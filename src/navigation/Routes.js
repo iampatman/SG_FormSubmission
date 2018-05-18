@@ -24,5 +24,5 @@ export default StackNavigator({
   [n.FORM_DETAIL]: {screen: FormDetailScreen},
   [n.WEB_VIEW]: {screen: WebViewScreen},
 }, {
-  initialRouteName: CONFIG.formid == 0 && CONFIG.formtype == 0  ? n.FORM_MENU : n.FORM_DETAIL
+  initialRouteName: CONFIG.formid == 0 || CONFIG.formtype == 0 ? n.FORM_MENU : n.FORM_DETAIL
 })
