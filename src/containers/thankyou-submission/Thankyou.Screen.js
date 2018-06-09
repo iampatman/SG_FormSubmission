@@ -20,7 +20,7 @@ export default class ThankyouScreen extends React.Component {
       <View style={styles.container}>
         <Image source={require('../../assets/images/submission-done.png')} />
           <Text style={styles.thankyou_text}>THANK YOU</Text>
-          <Text style={styles.description_text}>Your submission is being processed, you can track your order status in CASE Memu</Text>
+          <Text style={styles.description_text}>Your submission is being processed, you can track your order status in Activity Page</Text>
           <Button style={styles.submitBtn} onClick={this.onBackHomePressed}>
             <Text style={styles.submitText}>BACK HOME</Text>
           </Button>

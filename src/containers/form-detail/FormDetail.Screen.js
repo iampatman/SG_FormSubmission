@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   View,
-  Text,
+  Text, Keyboard,
   FlatList, SectionList, ScrollView, Alert, NativeModules, Platform, Button
 } from 'react-native'
 import styles from './FormDetail.Style'
@@ -30,6 +30,7 @@ export default class FormDetailScreen extends React.Component {
 
     this.state = {
       formId: this.formId,
+      isKeyboardVisible: false,
       formType: this.formType,
       data: [],
       message: [],
@@ -77,8 +78,27 @@ export default class FormDetailScreen extends React.Component {
     )
   }
 
-  componentDidMount () {
+  componentDidMount = () => {
     this.loadData()
+    this.onKeyboardDidShow = Keyboard.addListener('keyboardDidShow', this._onKeyboardDidShow)
+    this.onKeyboardDidHide = Keyboard.addListener('keyboardDidHide', this._onKeyboardDidHide)
+  }
+
+  componentWillUnmount = () => {
+    this.onKeyboardDidShow.remove()
+    this.onKeyboardDidHide.remove()
+  }
+
+  _onKeyboardDidShow = () => {
+    this.setState({
+      isKeyboardVisible: true
+    })
+  }
+
+  _onKeyboardDidHide = () => {
+    this.setState({
+      isKeyboardVisible: true
+    })
   }
 
   setLoading = (value) => {
@@ -126,9 +146,10 @@ export default class FormDetailScreen extends React.Component {
   }
 
   render () {
-    const {data, message, loading, formId, formType} = this.state
+    const {data, message, loading, formId, formType, isKeyboardVisible} = this.state
+    const paddingKeyboard = isKeyboardVisible ? {paddingBottom: 150} : {paddingBottom: 0}
     return (
-      <ScrollView style={styles.container}>
+      <ScrollView contentContainerStyle={[styles.container, paddingKeyboard]}>
         <Loader loading={loading} text={'Loading'}/>
         <SectionList
           renderItem={this.renderItem}

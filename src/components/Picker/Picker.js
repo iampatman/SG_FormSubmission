@@ -1,7 +1,5 @@
-
-
-
 import Picker from 'react-native-picker'
+import React from 'react'
 
 export const showPicker = (props = {}) => {
   Picker.init({
@@ -12,3 +10,32 @@ export const showPicker = (props = {}) => {
   })
   Picker.show()
 }
+
+// export class MyPicker extends React.Component {
+//   constructor (props) {
+//     super(props)
+//     var refPicker = null
+//     // this.state = {}
+//   }
+//
+//   show = () => {
+//     if (this.refPicker)
+//       this.refPicker.show()
+//   }
+//
+//   hide = () => {
+//     if (this.refPicker)
+//       this.refPicker.hide()
+//   }
+//
+//   render () {
+//     return (
+//       <Picker
+//         ref={ref => this.refPicker = ref}
+//         pickerConfirmBtnText={'Confirm'}
+//         pickerCancelBtnText={'Cancel'}
+//         pickerTitleText={'Select'}
+//       />
+//     )
+//   }
+// }

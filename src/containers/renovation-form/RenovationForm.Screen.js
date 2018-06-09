@@ -1,5 +1,16 @@
 import React from 'react'
-import { View, TextInput, Dimensions, Modal, Alert, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  TextInput,
+  Dimensions,
+  Modal,
+  Alert,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Keyboard
+} from 'react-native'
 import styles from './RenovationForm.Style'
 
 import Checkbox from '../../components/check-box/Checkbox'
@@ -41,6 +52,7 @@ export default class RenovationFormScreen extends React.Component {
 
     this.state = {
       showingCalendarPicker: false,
+      isKeyboardVisible: false,
       showingMovingContractor: false,
       tagChecked: false,
       loading: true,
@@ -52,8 +64,30 @@ export default class RenovationFormScreen extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount = () => {
     this.loadData()
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
+  }
+
+  componentWillUnmount = () => {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
+  }
+
+  _keyboardDidShow = () => {
+    console.log('_keyboardDidShow')
+    this.setState({
+      isKeyboardVisible: true
+    })
+  }
+
+  _keyboardDidHide = () => {
+    console.log('_keyboardDidHide')
+
+    this.setState({
+      isKeyboardVisible: false
+    })
   }
 
   loadData = () => {
@@ -185,13 +219,14 @@ export default class RenovationFormScreen extends React.Component {
   render () {
     const {
       typeData, loadingText, loading,
-      uploadedPhoto, selectedDocumentFileName
+      uploadedPhoto, selectedDocumentFileName, isKeyboardVisible
     } = this.state
+    const containerStyle = isKeyboardVisible == true ? {paddingBottom: 230} : {paddingBottom: 80}
 
     return (
       <View style={styles.container}>
         <Loader loading={loading} text={loadingText}/>
-        <ScrollView content={{paddingBottom: 80}}>
+        <ScrollView contentContainerStyle={containerStyle}>
           <TextInput ref={ref => this.refVehicleType = ref}
                      style={styles.input}
                      placeholder={'Renovation Type'}

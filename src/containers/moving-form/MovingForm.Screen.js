@@ -1,5 +1,16 @@
 import React from 'react'
-import { View, TextInput, Dimensions, Modal, Text, ScrollView, Alert, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  TextInput,
+  Dimensions,
+  Modal,
+  Keyboard,
+  Text,
+  ScrollView,
+  Alert,
+  TouchableOpacity,
+  Image
+} from 'react-native'
 import styles from './MovingForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
 import { showPicker } from '../../components/Picker/Picker'
@@ -52,6 +63,7 @@ export default class MovingFormScreen extends React.Component {
       showingCalendarPicker: false,
       showingMovingContractor: false,
       loading: true,
+      isKeyboardVisible: false,
       loadingText: 'Loading',
       movingSituationData: [],
       selectedType: 1,
@@ -60,6 +72,7 @@ export default class MovingFormScreen extends React.Component {
       uploadedPhoto65: Images.picture_frame_icon,
       selectedDocumentFileName65: ''
     }
+
   }
 
   loadData = () => {
@@ -76,8 +89,27 @@ export default class MovingFormScreen extends React.Component {
     }).catch()
   }
 
-  componentDidMount () {
+  componentDidMount = () => {
     this.loadData()
+    this.keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', this._keyboardDidShow)
+    this.keyboardDidHideListener = Keyboard.addListener('keyboardDidHide', this._keyboardDidHide)
+  }
+
+  componentWillUnmount = () => {
+    this.keyboardDidShowListener.remove()
+    this.keyboardDidHideListener.remove()
+  }
+
+  _keyboardDidShow = () => {
+    this.setState({
+      isKeyboardVisible: true
+    })
+  }
+
+  _keyboardDidHide = () => {
+    this.setState({
+      isKeyboardVisible: false
+    })
   }
 
   setLoading = (loading, loadingText) => {
@@ -229,13 +261,14 @@ export default class MovingFormScreen extends React.Component {
       movingSituationData, email, unit_no,
       selectedType, loading, loadingText,
       uploadedPhoto47, selectedDocumentFileName47,
-      uploadedPhoto65, selectedDocumentFileName65
+      uploadedPhoto65, selectedDocumentFileName65, isKeyboardVisible
     } = this.state
 
+    const containerStyle = isKeyboardVisible ? {paddingBottom: 260} : {paddingBottom: 80}
     return (
       <View style={styles.container}>
         <Loader loading={loading} text={loadingText}/>
-        <ScrollView contentContainerStyle={{paddingBottom: 80}}>
+        <ScrollView contentContainerStyle={containerStyle}>
           <TextInput ref={ref => this.refMovingSituation = ref}
                      style={styles.input}
                      placeholder={'Moving Situation'}
@@ -280,6 +313,9 @@ export default class MovingFormScreen extends React.Component {
 
           <CalendarPicker visible={this.state.showingCalendarPicker} title={'Moving date'}
                           onChange={this.onCalendarChanged}/>
+          {/*<MyPicker pickerData={movingSituationData.map((item) => item.name)}*/}
+                  {/*onPickerConfirm={this.onMovingSituationSelected}*/}
+                  {/*ref={ref => this.refPicker = ref}/>*/}
         </ScrollView>
         <Button type={'primary'} style={styles.submitBtn} onClick={this.onSubmitPressed}>SUBMIT</Button>
       </View>
