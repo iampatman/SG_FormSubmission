@@ -14,7 +14,7 @@ import {
 import styles from './RenovationForm.Style'
 
 import Checkbox from '../../components/check-box/Checkbox'
-import { showPicker } from '../../components/Picker/Picker'
+import { showPicker, hidePicker } from '../../components/Picker/Picker'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
 import { Button } from 'antd-mobile'
 import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
@@ -71,6 +71,7 @@ export default class RenovationFormScreen extends React.Component {
   }
 
   componentWillUnmount = () => {
+    hidePicker()
     this.keyboardDidShowListener.remove()
     this.keyboardDidHideListener.remove()
   }

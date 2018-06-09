@@ -2,7 +2,7 @@ import React from 'react'
 import { View, TextInput, Dimensions, Modal, Alert, Text, ScrollView, TouchableOpacity, Image } from 'react-native'
 import styles from './RefundForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
-import { showPicker } from '../../components/Picker/Picker'
+import { hidePicker, showPicker } from '../../components/Picker/Picker'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
 import { Button } from 'antd-mobile'
 import { navigateToThankyou } from '../../navigation/helpers/Nav.FormMenu.Helper'
@@ -41,6 +41,10 @@ export default class RefundFormScreen extends React.Component {
 
   componentDidMount () {
     this.loadData()
+  }
+
+  componentWillUnmount = () => {
+    hidePicker()
   }
 
   loadData = () => {

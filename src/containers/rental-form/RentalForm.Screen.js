@@ -14,7 +14,7 @@ import {
 import { ActionSheet } from 'antd-mobile'
 import styles from './RentalForm.Style'
 import Checkbox from '../../components/check-box/Checkbox'
-import { showPicker } from '../../components/Picker/Picker'
+import { showPicker, hidePicker } from '../../components/Picker/Picker'
 import showUploadFileActionSheet, { SELECTED_TYPE } from '../../components/uploader/Uploader'
 import CalendarPicker from '../../components/calendar/Calendar.Picker'
 import ImagePicker from 'react-native-image-picker'
@@ -61,6 +61,10 @@ export default class RentalFormScreen extends React.Component {
   componentDidMount () {
     this.loadData()
   }
+  componentWillUnmount = () => {
+    hidePicker()
+  }
+
 
   loadData = () => {
     loadData(DATA_TYPE.RENTAL).then((data) => {

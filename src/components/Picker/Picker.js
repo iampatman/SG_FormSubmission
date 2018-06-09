@@ -10,6 +10,10 @@ export const showPicker = (props = {}) => {
   })
   Picker.show()
 }
+export const hidePicker = (props = {}) => {
+  Picker.hide()
+}
+
 
 // export class MyPicker extends React.Component {
 //   constructor (props) {
