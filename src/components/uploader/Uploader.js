@@ -3,8 +3,6 @@ import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker
 import ImagePicker from 'react-native-image-picker'
 import { Platform } from 'react-native'
 
-import Images from '../../assets/Images'
-
 export const SELECTED_TYPE = {
   IMAGE: 1,
   DOCUMENT: 2
