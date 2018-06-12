@@ -71,9 +71,13 @@ export default class VehicleFormScreen extends React.Component {
     if (type == '' || vehicle_no == '' || usage_end_date == '' || usage_start_date == '') {
       Alert.alert('Notice', 'Please fill all the fields')
       return false
-    } else {
-      return true
     }
+    if (moment(usage_start_date).isBefore(usage_end_date) === false) {
+      Alert.alert('Notice', 'Start date must be before end date')
+      return false
+    }
+    return true
+
   }
 
   setLoading = (loading, loadingText) => {
@@ -137,8 +141,8 @@ export default class VehicleFormScreen extends React.Component {
   }
 
   onCalendarChanged = (date: Date) => {
-    let dateStr = date.toDateString()
-    let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('YYYY/MM/DD')
+    // let dateStr = date.toDateString()
+    let formattedStr = moment(date, 'YYYY-MM-DD').format('YYYY/MM/DD')
     // console.log('CalendarPicker ' + formattedStr)
     this.refTenancyFrom.setNativeProps({text: formattedStr})
     if (this.state.commenceDateSelected == true) {

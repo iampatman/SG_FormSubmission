@@ -54,7 +54,8 @@ export default class RentalFormScreen extends React.Component {
       commenceDateSelected: false,
       typeData: [],
       uploadedPhoto: Images.picture_frame_icon,
-      selectedDocumentFileName: ''
+      selectedDocumentFileName: '',
+      minDate: ''
     }
   }
 
@@ -107,12 +108,17 @@ export default class RentalFormScreen extends React.Component {
 
   validateForm = () => {
     const {type, tenancy_start_date, tenancy_end_date} = this.data
+
     if (type == '' || tenancy_end_date == '' || tenancy_start_date == '') {
       Alert.alert('Notice', 'Please fill all the fields')
       return false
-    } else {
-      return true
     }
+    if (moment(tenancy_start_date).isBefore(tenancy_end_date) === false) {
+      Alert.alert('Notice', 'Start date must be before end date')
+      return false
+    }
+    return true
+
   }
 
   onSubmitPressed = () => {
@@ -123,9 +129,9 @@ export default class RentalFormScreen extends React.Component {
     this.submitFormData(this.data)
   }
 
-  onCalendarChanged = (date: Date) => {
-    let dateStr = date.toDateString()
-    let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('YYYY/MM/DD')
+  onCalendarChanged = (date) => {
+    // let dateStr = date.toDateString()
+    let formattedStr = moment(date, 'YYYY-MM-DD').format('YYYY/MM/DD')
     console.log('CalendarPicker ' + formattedStr)
     this.refTenancyFrom.setNativeProps({text: formattedStr})
     if (this.state.commenceDateSelected == true) {
@@ -222,9 +228,6 @@ export default class RentalFormScreen extends React.Component {
             <Text>I agree to the terms and conditions</Text>
           </View>
           <CalendarPicker visible={this.state.showingCalendarPicker} title={'Moving date'}
-                          calendarProps={{
-                            minDate: this.data.tenancy_start_date
-                          }}
                           onChange={this.onCalendarChanged}/>
         </ScrollView>
         <Button disabled={!this.state.tacChecked}

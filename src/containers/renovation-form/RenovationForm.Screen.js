@@ -130,9 +130,13 @@ export default class RenovationFormScreen extends React.Component {
     if (type == '' || commence_date == '' || completed_date == '') {
       Alert.alert('Notice', 'Please fill all the fields')
       return false
-    } else {
-      return true
     }
+    if (moment(commence_date).isBefore(completed_date) === false) {
+      Alert.alert('Notice', 'Start date must be before end date')
+      return false
+    }
+    return true
+
   }
   onSubmitPressed = () => {
     if (this.validateForm() == false) {
@@ -142,9 +146,9 @@ export default class RenovationFormScreen extends React.Component {
     this.submitFormData(this.data)
   }
 
-  onCalendarChanged = (date: Date) => {
-    let dateStr = date.toDateString()
-    let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('YYYY/MM/DD')
+  onCalendarChanged = (date) => {
+    // let dateStr = date.toDateString()
+    let formattedStr = moment(date, 'YYYY-MM-DD').format('YYYY/MM/DD')
     // console.log('CalendarPicker ' + formattedStr)
     this.refTenancyFrom.setNativeProps({text: formattedStr})
     if (this.state.commenceDateSelected == true) {

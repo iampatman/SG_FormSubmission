@@ -156,9 +156,10 @@ export default class MovingFormScreen extends React.Component {
     this.submitFormData(this.data)
   }
 
-  onCalendarChanged = (date: Date) => {
-    let dateStr = date.toDateString()
-    let formattedStr = moment(dateStr, 'ddd MMM DD YYYY').format('YYYY/MM/DD')
+  onCalendarChanged = (date) => {
+    // let dateStr = date.toDateString()
+    // console.log('onCalendarChanged ' + date)
+    let formattedStr = moment(date, 'YYYY-MM-DD').format('YYYY/MM/DD')
     console.log('CalendarPicker ' + formattedStr)
     this.refTenancyFrom.setNativeProps({text: formattedStr})
     this.data.moving_date = formattedStr
