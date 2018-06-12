@@ -1,39 +1,29 @@
-import {
-  StyleSheet,
-  Dimensions
-} from 'react-native'
+import { StyleSheet } from 'react-native'
 
-const {width} = Dimensions.get('window')
-
-export const styles = StyleSheet.create({
-  modalBackground: {
-    flex: 1,
-    alignItems: 'center',
-    flexDirection: 'column',
-    justifyContent: 'flex-end'
+export default StyleSheet.create({
+  backdrop: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0,0,0,0.4)'
   },
-  topContainer: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    alignSelf: 'stretch',
-    backgroundColor: 'gray',
-    opacity: 0.7
+  content: {
+    left: 0,
+    right: 0,
+    bottom: 0,
+    padding: 10,
+    backgroundColor: 'white',
+    position: 'absolute',
+    alignItems: 'center'
   },
-  titleContainer: {
-    height: 50,
-    alignSelf: 'stretch',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'white'
+  title: {
+    textAlign: 'center',
+    color: 'grey',
+    marginBottom: 10
   },
-  titleText: {
-    fontSize: 15
-  },
-  calendarContainer: {
-    flex: 1,
-    width: width,
-    // height: width / 2,
-    justifyContent: 'flex-start',
-    opacity: 1
+  calendar: {
+    alignSelf: 'stretch'
   }
 })

@@ -16,9 +16,10 @@ const {ReactManager} = NativeModules
 export default class FormMenuScreen extends React.Component {
   static navigationOptions = {
     title: 'Form Submission',
-    headerLeft: <Button title={'Back'} onPress={() => {
-      FormMenuScreen.goBackStaticFunc()
-    }}></Button>
+    headerLeft: <TouchableOpacity onPress={() => {
+      FormMenuScreen.goBackStaticFunc()}}>
+      <Image source={require('../../assets/images/left-arrow.png')} style={{height: 20, width: 20, marginLeft: 10}}/>
+    </TouchableOpacity>
   }
 
   static goBackStaticFunc = () => {
@@ -72,7 +73,7 @@ export default class FormMenuScreen extends React.Component {
     return (
       <View style={styles.container}>
         {/*<TouchableOpacity style={styles.historyContainer} onPress={this.onShowHistoryPressed}>*/}
-          {/*<Text>Check Submission History</Text>*/}
+        {/*<Text>Check Submission History</Text>*/}
         {/*</TouchableOpacity>*/}
         <FlatList data={listData}
                   renderItem={(item) => this.renderItem(item.item)}

@@ -194,7 +194,7 @@ export default class VehicleFormScreen extends React.Component {
                               commenceDateSelected: false
                             })}>
             <Text>
-              {this.data.usage_end_date == '' ? 'Usage Start Date' : this.data.usage_end_date}
+              {this.data.usage_end_date == '' ? 'Usage End Date' : this.data.usage_end_date}
             </Text>
           </TouchableOpacity>
           <View

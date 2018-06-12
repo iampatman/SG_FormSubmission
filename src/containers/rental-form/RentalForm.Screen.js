@@ -61,10 +61,10 @@ export default class RentalFormScreen extends React.Component {
   componentDidMount () {
     this.loadData()
   }
+
   componentWillUnmount = () => {
     hidePicker()
   }
-
 
   loadData = () => {
     loadData(DATA_TYPE.RENTAL).then((data) => {
@@ -222,6 +222,9 @@ export default class RentalFormScreen extends React.Component {
             <Text>I agree to the terms and conditions</Text>
           </View>
           <CalendarPicker visible={this.state.showingCalendarPicker} title={'Moving date'}
+                          calendarProps={{
+                            minDate: this.data.tenancy_start_date
+                          }}
                           onChange={this.onCalendarChanged}/>
         </ScrollView>
         <Button disabled={!this.state.tacChecked}

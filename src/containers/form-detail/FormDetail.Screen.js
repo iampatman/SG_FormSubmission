@@ -2,7 +2,7 @@ import React from 'react'
 import {
   View,
   Text, Keyboard,
-  FlatList, SectionList, ScrollView, Alert, NativeModules, Platform, Button
+  FlatList, SectionList, ScrollView, Alert, NativeModules, Platform, Button, TouchableOpacity
 } from 'react-native'
 import styles from './FormDetail.Style'
 import { loadFormDetail } from '../../api/index'
@@ -13,6 +13,7 @@ import {
 import Loader from '../../components/loader/Loader'
 import Messages from '../../components/messages/Messages'
 import CONFIG from '../../utils/Config'
+import FormMenuScreen from '../forms-menu/FormMenu.Screen'
 
 const {ReactManager} = NativeModules
 
@@ -43,9 +44,10 @@ export default class FormDetailScreen extends React.Component {
     if (CONFIG.formid != 0 && CONFIG.formtype != 0) {
       return {
         title: 'Form Detail',
-        headerLeft: <Button title={'Back'} onPress={() => {
-          FormDetailScreen.goBackStaticFunc()
-        }}></Button>
+        headerLeft: <TouchableOpacity onPress={() => {
+          FormMenuScreen.goBackStaticFunc()}}>
+          <Image source={require('../../assets/images/left-arrow.png')} style={{height: 20, width: 20, marginLeft: 10}}/>
+        </TouchableOpacity>
       }
     } else {
       return null
