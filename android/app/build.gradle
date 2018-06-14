@@ -137,6 +137,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-exception-handler')
     compile project(':react-native-document-picker')
     compile project(':react-native-pdf')
     compile project(':react-native-image-picker')

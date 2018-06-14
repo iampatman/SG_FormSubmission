@@ -2,6 +2,9 @@ import React, { Component } from 'react'
 import Routes from './src/navigation/Routes'
 import DetailRoutes from './src/navigation/DetailStack'
 import CONFIG from './src/utils/Config'
+import setGlobalHandler from './src/utils/GlobalErrorHandler'
+
+setGlobalHandler()
 
 export default class App extends Component<> {
 
@@ -16,6 +19,7 @@ export default class App extends Component<> {
 
   render () {
     console.log('CONFIG: ' + JSON.stringify(CONFIG))
+
     if (CONFIG.formid == 0 || CONFIG.formtype == 0) {
       return (
         <Routes/>

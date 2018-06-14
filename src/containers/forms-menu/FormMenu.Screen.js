@@ -1,7 +1,7 @@
 import React from 'react'
 import {
   View, Text, FlatList, Image,
-  TouchableOpacity, NativeModules, Platform, Button
+  TouchableOpacity, NativeModules, Platform,
 } from 'react-native'
 import styles from './FormMenu.Style'
 import listData from './FormMenu.Form'

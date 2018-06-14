@@ -3,6 +3,7 @@ package com.sg_formsubmission;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.masteratul.exceptionhandler.ReactNativeExceptionHandlerPackage;
 import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
 import org.wonday.pdf.RCTPdfView;
 import com.imagepicker.ImagePickerPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeExceptionHandlerPackage(),
             new ReactNativeDocumentPicker(),
             new RCTPdfView(),
             new ImagePickerPackage(),

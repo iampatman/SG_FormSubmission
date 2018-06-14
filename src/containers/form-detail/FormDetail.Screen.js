@@ -2,7 +2,7 @@ import React from 'react'
 import {
   View,
   Text, Keyboard,
-  FlatList, SectionList, ScrollView, Alert, NativeModules, Platform, Button, TouchableOpacity
+  FlatList, SectionList, ScrollView, Alert, NativeModules, Platform, Button, TouchableOpacity, Image
 } from 'react-native'
 import styles from './FormDetail.Style'
 import { loadFormDetail } from '../../api/index'
