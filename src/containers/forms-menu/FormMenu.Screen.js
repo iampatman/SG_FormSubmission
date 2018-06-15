@@ -28,7 +28,7 @@ export default class FormMenuScreen extends React.Component {
       if (Platform.OS === 'ios') {
         ReactManager.dismissPresentedViewController(CONFIG.rootTag)
       } else {
-        NativeModules.QRActivityStarter.goback_LifeUp()
+        NativeModules.ActivityStarter.goback_LifeUp()
       }
 
     }
